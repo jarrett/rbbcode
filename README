@@ -1,0 +1,10 @@
+RbbCode is a customizable Ruby library for parsing BB Code.
+
+Example usage:
+
+require 'rbbcode'
+
+bb_code = 'This is [b]bold[/b] text'
+parser = RbbCode::Parser.new
+html = parser.parse(bb_code)
+# => 'This is <strong>bold</strong> text'

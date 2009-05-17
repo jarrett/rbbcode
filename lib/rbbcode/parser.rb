@@ -1,5 +1,9 @@
 module RbbCode
 	class Parser
+		def initialize(config = {})
+			@config = config
+		end
+		
 		def parse(str)
 			str = escape_html_tags(str)
 			tokens = Tokenizer.new(str).tokenize
