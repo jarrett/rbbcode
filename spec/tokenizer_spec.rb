@@ -1,11 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/rbbcode')
 
+# These examples should be DRYed up
+
 describe RbbCode::Tokenizer do
 	it 'should tokenize "This is a [b]bold[/b] string"' do
 		str = 'This is a [b]bold[/b] string'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -29,9 +29,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [[b]improperly[/b] formed"' do
 		str = 'This is [[b]improperly[/b] formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -55,9 +53,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]]improperly[/b] formed"' do
 		str = 'This is [b]]improperly[/b] formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -80,9 +76,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[[/b] formed"' do
 		str = 'This is [b]improperly[[/b] formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -106,9 +100,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[/b]] formed"' do
 		str = 'This is [b]improperly[/b]] formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -131,9 +123,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b][improperly[/b] formed"' do
 		str = 'This is [b][improperly[/b] formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -156,9 +146,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[/b][ formed"' do
 		str = 'This is [b]improperly[/b][ formed'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		
@@ -181,9 +169,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This here [ is a lone bracket' do
 		str = 'This here [ is a lone bracket'
-		puts str
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 1
 		
@@ -193,9 +179,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should not differentiate between valid and invalid tags' do
 		str = 'This is an [foo]unrecognized[/foo] tag'
-		
 		tokens = RbbCode::Tokenizer.new(str).tokenize
-		puts tokens.collect { |token| [token.type, token.text] }.inspect
 		
 		tokens.length.should == 5
 		

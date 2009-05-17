@@ -10,6 +10,7 @@ module RbbCode
 		def initialize(_type)
 			@type = _type
 			@text = ''
+			@mate = nil
 		end
 		
 		def tag_name
