@@ -1,6 +1,43 @@
 module RbbCode
 	class Cleaner
+		DEFAULT_ALLOWED_TAGS = [
+			'b',
+			'i',
+			'u',
+			'url',
+			'img',
+			'code',
+			'quote',
+			'list',
+			'*'
+		]
+		
 		def clean
+			mate_tags
+			apply_schema
+			@tokens
+		end
+		
+		def errors?
+			@errors
+		end
+		
+		def initialize(tokens)
+			@tokens = tokens
+			@errors = false
+		end
+		
+		protected
+		
+		def apply_schema
+			@tokens.each_with_index do |token, i|
+				if token.type == :opening_tag
+					
+				end
+			end
+		end
+		
+		def mate_tags
 			open_tags = []
 			resulting_tokens = []
 			@tokens.each do |token|
@@ -59,15 +96,6 @@ module RbbCode
 				@errors = true
 			end
 			@tokens = resulting_tokens
-		end
-		
-		def errors?
-			@errors
-		end
-		
-		def initialize(tokens)
-			@tokens = tokens
-			@errors = false
 		end
 	end
 end

@@ -1,13 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe RbbCode::Cleaner do
-	def make_tokens(tuples)
-		tuples.collect do |tuple|
-			token = RbbCode::Token.new(tuple[0])
-			token.text = tuple[1]
-			token
-		end
-	end
+	include TokenTestHelper
 	
 	it 'should close unclosed opening tags' do
 		input = make_tokens([
@@ -180,5 +174,61 @@ describe RbbCode::Cleaner do
 		cleaned[4].text.should == ' text'
 		
 		cleaner.errors?.should == false
+	end
+	
+	it 'should remove tags that are not allowed' do
+		input = make_tokens([
+			[:text, 'There is '],
+			[:opening_tag, '[foo]'],
+			[:text, 'no such thing'],
+			[:closing_tag, '[/foo]'],
+			[:text, ' as a foo tag']
+		])
+		
+		cleaner = RbbCode::Cleaner.new(input)		
+		cleaned = cleaner.clean
+		
+		cleaned.length.should == 3
+		
+		cleaned[0].type.should == :text
+		cleaned[0].text.should == 'There is '
+		
+		cleaned[1].type.should == :text
+		cleaned[1].text.should == 'no such thing'
+		
+		cleaned[2].type.should == :text
+		cleaned[2].text.should == ' as a foo tag'
+	end
+	
+	it 'should remove tags that are allowed in general, but not in their context' do
+		input = make_tokens([
+			[:opening_tag, '[b]'],
+			[:text, 'Bold and '],
+			[:opening_tag, '[b]'],
+			[:text, 'bolder'],
+			[:closing_tag, '[/b]'],
+			[:text, ' still'],
+			[:closing_tag, '[/b]']
+		])
+		
+		cleaner = RbbCode::Cleaner.new(input)		
+		cleaned = cleaner.clean
+		
+		cleaned.length.should == 5
+		
+		cleaned[0].type.should == :opening_tag
+		cleaned[0].tag_name.should == 'b'
+		
+		cleaned[1].type.should == :text
+		cleaned[1].text.should == 'Bold and '
+		
+		cleaned[2].type.should == :text
+		cleaned[2].text.should == 'bolder'
+		
+		cleaned[3].type.should == :text
+		cleaned[3].text.should == ' still'
+		
+		cleaned[4].type.should == :closing_tag
+		cleaned[4].tag_name.should == 'b'
 	end
 end

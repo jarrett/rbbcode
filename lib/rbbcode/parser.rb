@@ -20,6 +20,9 @@ module RbbCode
 			tokens = remove_forbidden_tags(tokens)
 			
 			html_maker = @config[:html_maker_class].new(tokens)
+			if @config.has_key?(:schema)
+				html_maker.schema = @config[:schema]
+			end
 			html_maker.make_html
 		end
 		
