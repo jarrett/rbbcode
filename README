@@ -4,6 +4,7 @@ RbbCode validates and cleans input. It supports customizable schemas so you can 
 
 Example usage:
 
+require 'rubygems'
 require 'rbbcode'
 
 bb_code = 'This is [b]bold[/b] text'
