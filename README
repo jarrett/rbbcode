@@ -1,4 +1,4 @@
-RbbCode is a customizable Ruby library for parsing BB Code.
+RbbCode is a customizable Ruby library for parsing BB Code. It attempts to follow OOP guidelines, so you should be able to change many aspects of its behavior by subclassing rather than monkeypatching.
 
 Example usage:
 

@@ -4,6 +4,7 @@ require 'rbbcode/parser'
 require 'rbbcode/token'
 require 'rbbcode/tokenizer'
 require 'rbbcode/cleaner'
+require 'rbbcode/html_maker'
 
 module RbbCode
 	# Don't change this -- override Parse#tag_allowed? in a subclass instead
@@ -13,7 +14,8 @@ module RbbCode
 		'u',
 		'url',
 		'img',
-		'code'
+		'code',
+		'quote'
 	]
 	
 	# Don't change this -- override Parse#tag_to_html in a subclass instead
@@ -21,6 +23,7 @@ module RbbCode
 		'b' => 'strong',
 		'i' => 'em',
 		'u' => 'u',
-		'code' => 'code'
+		'code' => 'code',
+		'quote' => 'blockquote'
 	}
 end

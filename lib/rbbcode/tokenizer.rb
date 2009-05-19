@@ -5,6 +5,8 @@ module RbbCode
 		LOWERCASE_A_CODE = 97
 		LOWERCASE_Z_CODE = 122
 		
+		ALLOWED_VALUE_CHARS = [':', '/', '.', '?', '&', '=']
+		
 		def initialize(str)
 			@str = str
 			@tokens = []
@@ -49,13 +51,15 @@ module RbbCode
 					end
 					@current_token.text << char
 				when :opening_tag, :closing_tag
-					if alphabetic_char?(char_code)
+					if alphabetic_char?(char_code) or (@current_token.type == :opening_tag and char == '=')
 						# In the tag name
 						@current_token.text << char
 					elsif char == ']'
 						@current_token.text << ']'
 						@tokens << @current_token
 						@current_token = Token.new(:unknown)
+					elsif @current_token.has_value? and ALLOWED_VALUE_CHARS.include?(char)
+						@current_token.text << char
 					else
 						# The last token turned out not to be a tag
 						invalidate_tag_token(char)

@@ -1,4 +1,20 @@
-require File.expand_path(File.dirname(__FILE__) + '/../lib/rbbcode')
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+class MockSubclass
+	@@received = []
+	
+	def initialize(*args)
+		# Don't do anything
+	end
+	
+	def method_missing(meth, *args)
+		@@received << meth.to_sym
+	end
+	
+	def self.received?(meth)
+		@@received.include?(meth.to_sym)
+	end
+end
 
 describe RbbCode::Parser do
 	context 'parse_bb_code' do
@@ -45,8 +61,8 @@ describe RbbCode::Parser do
 			@parser.parse('[b][i]This is bold-italic[/i][/b]').should == '<strong></em>This is bold-italic</em></strong>'
 		end
 		
-		it 'should ignore unrecognized tags' do
-			@parser.parse('There is [foo]no such thing[/foo] as a foo tag').should == 'There is [foo]no such thing[/foo] as a foo tag'
+		it 'should ignore forbidden or unrecognized tags' do
+			@parser.parse('There is [foo]no such thing[/foo] as a foo tag').should == 'There is no such thing as a foo tag'
 		end
 		
 		it 'should ignore improperly matched tags' do
@@ -72,6 +88,33 @@ describe RbbCode::Parser do
 		
 		it 'should work when the string begins with a tag' do
 			@parser.parse('[b]This is bold[/b]').should == '<strong>This is bold</strong>'
+		end
+		
+		it 'should use the specified tokenizer subclass' do
+			@parser = RbbCode::Parser.new({:tokenizer_class => MockSubclass})
+			begin
+				@parser.parse('This is [b]bold[/b] text')
+			ensure
+				MockSubclass.received?(:tokenize).should be_true
+			end
+		end
+		
+		it 'should use the specified cleaner subclass' do
+			@parser = RbbCode::Parser.new({:cleaner_class => MockSubclass})
+			begin
+				@parser.parse('This is [b]bold[/b] text')
+			ensure
+				MockSubclass.received?(:clean).should be_true
+			end
+		end
+		
+		it 'should use the specified HTML-maker subclass' do
+			@parser = RbbCode::Parser.new({:html_maker_class => MockSubclass})
+			begin
+				@parser.parse('This is [b]bold[/b] text')
+			ensure
+				MockSubclass.received?(:make_html).should be_true
+			end
 		end
 	end
 end
