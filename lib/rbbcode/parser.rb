@@ -14,7 +14,7 @@ module RbbCode
 			tokenizer = @config[:tokenizer_class].new(str)
 			tokens = tokenizer.tokenize
 			
-			cleaner = @config[:cleaner_class].new(tokens)
+			cleaner = @config[:cleaner_class].new(tokens, RbbCode::Schema.new)
 			tokens = cleaner.clean
 			
 			tokens = remove_forbidden_tags(tokens)

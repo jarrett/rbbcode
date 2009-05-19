@@ -12,7 +12,7 @@ describe RbbCode::HtmlMaker do
 			[:text, ' text']
 		])
 		
-		maker = HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new(input)
 		
 		maker.make_html.should == 'This is <strong>bold</strong> text'
 	end

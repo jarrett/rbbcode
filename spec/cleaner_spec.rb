@@ -13,7 +13,7 @@ describe RbbCode::Cleaner do
 			[:closing_tag, '[/i]']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 7
@@ -49,7 +49,7 @@ describe RbbCode::Cleaner do
 			[:text, ' tag is unmatched']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 2
@@ -74,7 +74,7 @@ describe RbbCode::Cleaner do
 			[:text, ' mismatch']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 7
@@ -114,7 +114,7 @@ describe RbbCode::Cleaner do
 			[:closing_tag, '[/quote]']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 6
@@ -153,7 +153,7 @@ describe RbbCode::Cleaner do
 			[:text, ' text']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)		
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)		
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 5
@@ -185,7 +185,7 @@ describe RbbCode::Cleaner do
 			[:text, ' as a foo tag']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)		
+		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)		
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 3
@@ -211,7 +211,9 @@ describe RbbCode::Cleaner do
 			[:closing_tag, '[/b]']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input)		
+		schema = RbbCode::Schema.new
+		schema.tag('b').may_not_be_nested
+		cleaner = RbbCode::Cleaner.new(input, schema)
 		cleaned = cleaner.clean
 		
 		cleaned.length.should == 5

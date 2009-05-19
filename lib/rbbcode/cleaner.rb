@@ -22,17 +22,28 @@ module RbbCode
 			@errors
 		end
 		
-		def initialize(tokens)
+		def initialize(tokens, schema)
 			@tokens = tokens
 			@errors = false
+			@schema = schema
 		end
 		
 		protected
 		
 		def apply_schema
+			open_tags = []
 			@tokens.each_with_index do |token, i|
 				if token.type == :opening_tag
-					
+					if @schema.tag(token.tag_name).valid_in_context?(open_tags)
+						open_tags << token.tag_name
+					else
+						@tokens.delete(token)
+						@tokens.delete(token.mate)
+					end
+				elsif token.type == :closing_tag
+					# By now, the tags should be properly mated and nested, so we can
+					# just blindly pop the last tag off the stack
+					open_tags.pop
 				end
 			end
 		end
