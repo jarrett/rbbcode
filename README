@@ -1,5 +1,7 @@
 RbbCode is a customizable Ruby library for parsing BB Code. It attempts to follow OOP guidelines, so you should be able to change many aspects of its behavior by subclassing rather than monkeypatching.
 
+RbbCode validates and cleans input. It supports customizable schemas so you can set rules about what tags are allowed where. The default rules are designed to ensure valid HTML output.
+
 Example usage:
 
 require 'rbbcode'
