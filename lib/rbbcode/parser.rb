@@ -31,19 +31,5 @@ module RbbCode
 		def escape_html_tags(str)
 			str.gsub('<', '&lt;').gsub('>', '&gt;')
 		end
-		
-		def remove_forbidden_tags(tokens)
-			tokens.reject do |token|
-				(token.type == :opening_tag or token.type == :closing_tag) and !tag_allowed?(token.tag_name)
-			end
-		end
-		
-		def tag_allowed?(tag_name)
-			DEFAULT_ALLOWED_TAGS.include?(tag_name)
-		end
-		
-		def tag_mappings
-			DEFAULT_TAG_MAPPINGS
-		end
 	end
 end
