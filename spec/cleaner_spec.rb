@@ -13,8 +13,8 @@ describe RbbCode::Cleaner do
 			[:closing_tag, '[/i]']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 7
 		
@@ -49,8 +49,8 @@ describe RbbCode::Cleaner do
 			[:text, ' tag is unmatched']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 2
 		
@@ -74,8 +74,8 @@ describe RbbCode::Cleaner do
 			[:text, ' mismatch']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 7
 		
@@ -114,8 +114,8 @@ describe RbbCode::Cleaner do
 			[:closing_tag, '[/quote]']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 6
 		
@@ -153,8 +153,8 @@ describe RbbCode::Cleaner do
 			[:text, ' text']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)		
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 5
 		
@@ -185,8 +185,8 @@ describe RbbCode::Cleaner do
 			[:text, ' as a foo tag']
 		])
 		
-		cleaner = RbbCode::Cleaner.new(input, RbbCode::Schema.new)		
-		cleaned = cleaner.clean
+		cleaner = RbbCode::Cleaner.new(RbbCode::Schema.new)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 3
 		
@@ -213,8 +213,9 @@ describe RbbCode::Cleaner do
 		
 		schema = RbbCode::Schema.new
 		schema.tag('b').may_not_be_nested
-		cleaner = RbbCode::Cleaner.new(input, schema)
-		cleaned = cleaner.clean
+		
+		cleaner = RbbCode::Cleaner.new(schema)
+		cleaned = cleaner.clean(input)
 		
 		cleaned.length.should == 5
 		

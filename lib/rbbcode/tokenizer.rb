@@ -7,15 +7,10 @@ module RbbCode
 		
 		ALLOWED_VALUE_CHARS = [':', '/', '.', '?', '&', '=']
 		
-		def initialize(str)
-			@str = str
+		def tokenize(str)
 			@tokens = []
-			@current_token = nil
-		end
-	
-		def tokenize
 			@current_token = Token.new(:unknown)
-			@str.each_byte do |char_code|
+			str.each_byte do |char_code|
 				char = char_code.chr
 				case @current_token.type
 				when :unknown
@@ -58,7 +53,7 @@ module RbbCode
 						@current_token.text << ']'
 						@tokens << @current_token
 						@current_token = Token.new(:unknown)
-					elsif @current_token.has_value? and ALLOWED_VALUE_CHARS.include?(char)
+					elsif @current_token.type == :opening_tag and @current_token.has_value? and ALLOWED_VALUE_CHARS.include?(char)
 						@current_token.text << char
 					else
 						# The last token turned out not to be a tag

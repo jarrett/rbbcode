@@ -12,9 +12,9 @@ describe RbbCode::HtmlMaker do
 			[:text, ' text']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new
 		
-		maker.make_html.should == 'This is <strong>bold</strong> text'
+		maker.make_html(input).should == 'This is <strong>bold</strong> text'
 	end
 	
 	it 'should work for nested tags' do
@@ -30,9 +30,9 @@ describe RbbCode::HtmlMaker do
 			[:text, ', and in some places not']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
-		
-		maker.make_html.should == 'This <strong>text is bold <u>and underlined</u> in some places</strong>, and in some places not'
+		maker = RbbCode::HtmlMaker.new
+
+		maker.make_html(input).should == 'This <strong>text is bold <u>and underlined</u> in some places</strong>, and in some places not'
 	end
 	
 	it 'should corrrectly replace img' do
@@ -42,9 +42,9 @@ describe RbbCode::HtmlMaker do
 			[:closing_tag, '[/img]']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new
 		
-		maker.make_html.should == '<img src="http://example.com/image.jpg" alt=""/>'
+		maker.make_html(input).should == '<img src="http://example.com/image.jpg" alt=""/>'
 	end
 	
 	it 'should correctly replace url with no value' do
@@ -54,9 +54,9 @@ describe RbbCode::HtmlMaker do
 			[:closing_tag, '[/url]']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new
 		
-		maker.make_html.should == '<a href="http://example.com">http://example.com</a>'
+		maker.make_html(input).should == '<a href="http://example.com">http://example.com</a>'
 	end
 	
 	it 'should correctly replace url with a value' do
@@ -66,9 +66,9 @@ describe RbbCode::HtmlMaker do
 			[:closing_tag, '[/url]']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new
 		
-		maker.make_html.should == '<a href="http://example.com">Example</a>'
+		maker.make_html(input).should == '<a href="http://example.com">Example</a>'
 	end
 	
 	it 'should not allow JavaScript in the tag values' do
@@ -78,8 +78,8 @@ describe RbbCode::HtmlMaker do
 			[:closing_tag, '[/url]']
 		])
 		
-		maker = RbbCode::HtmlMaker.new(input)
+		maker = RbbCode::HtmlMaker.new
 		
-		maker.make_html.should == '<a href="#js_not_allowed">Foo Alert</a>'
+		maker.make_html(input).should == '<a href="#js_not_allowed">Foo Alert</a>'
 	end
 end

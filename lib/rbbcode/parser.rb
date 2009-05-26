@@ -1,29 +1,29 @@
 module RbbCode
 	class Parser
 		def initialize(config = {})
-			@config = {
-				:tokenizer_class => RbbCode::Tokenizer,
-				:cleaner_class => RbbCode::Cleaner,
-				:html_maker_class => RbbCode::HtmlMaker
-			}.merge(config)
+			@config = config
 		end
 		
 		def parse(str)
 			str = escape_html_tags(str)
 			
-			tokenizer = @config[:tokenizer_class].new(str)
-			tokens = tokenizer.tokenize
+			tokenizer = @config[:tokenizer] || RbbCode::Tokenizer.new
+			tokens = tokenizer.tokenize(str)
 			
-			cleaner = @config[:cleaner_class].new(tokens, RbbCode::Schema.new)
-			tokens = cleaner.clean
-			
-			tokens = remove_forbidden_tags(tokens)
-			
-			html_maker = @config[:html_maker_class].new(tokens)
 			if @config.has_key?(:schema)
-				html_maker.schema = @config[:schema]
+				schema = @config[:schema]
+			else
+				schema = RbbCode::Schema.new
+				schema.use_defaults
 			end
-			html_maker.make_html
+			
+			line_breaker = @config[:line_breaker] || RbbCode::LineBreaker.new
+			
+			cleaner = @config[:cleaner] || RbbCode::Cleaner.new(schema, line_breaker)
+			tokens = cleaner.clean(tokens)
+			
+			html_maker = @config[:html_maker] || RbbCode::HtmlMaker.new
+			html_maker.make_html(tokens)
 		end
 		
 		protected

@@ -12,33 +12,31 @@ module RbbCode
 			'*'
 		]
 		
-		def clean
-			mate_tags
-			apply_schema
-			@tokens
+		def clean(tokens)
+			apply_schema(mate_tags(tokens))
 		end
 		
 		def errors?
 			@errors
 		end
 		
-		def initialize(tokens, schema)
-			@tokens = tokens
+		def initialize(schema, line_breaker)
 			@errors = false
 			@schema = schema
+			@line_breaker = line_breaker
 		end
 		
 		protected
 		
-		def apply_schema
+		def apply_schema(tokens)
 			open_tags = []
-			@tokens.each_with_index do |token, i|
+			tokens.each_with_index do |token, i|
 				if token.type == :opening_tag
 					if @schema.tag(token.tag_name).valid_in_context?(open_tags)
 						open_tags << token.tag_name
 					else
-						@tokens.delete(token)
-						@tokens.delete(token.mate)
+						tokens.delete(token)
+						tokens.delete(token.mate)
 					end
 				elsif token.type == :closing_tag
 					# By now, the tags should be properly mated and nested, so we can
@@ -48,10 +46,14 @@ module RbbCode
 			end
 		end
 		
-		def mate_tags
+		def break_lines(tokens)
+			
+		end
+		
+		def mate_tags(tokens)
 			open_tags = []
 			resulting_tokens = []
-			@tokens.each do |token|
+			tokens.each do |token|
 				case token.type
 				when :opening_tag
 					open_tags << token
@@ -102,11 +104,21 @@ module RbbCode
 				open_tags.each do |opening_tag|
 					closing_tag = Token.new(:closing_tag)
 					closing_tag.tag_name = opening_tag.tag_name
+					closing_tag.mate = opening_tag
+					opening_tag.mate = closing_tag
 					resulting_tokens << closing_tag
 				end
 				@errors = true
 			end
-			@tokens = resulting_tokens
+			
+			# Check for an unlikely error condition: a tag without a mate
+			resulting_tokens.each do |token|
+				if token.type == :opening_tag or token.type == :closing_tag and token.mate.nil?
+					raise "Tag without mate in #{resulting_tokens.inspect}"
+				end
+			end
+			
+			resulting_tokens
 		end
 	end
 end

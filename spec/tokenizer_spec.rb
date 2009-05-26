@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe RbbCode::Tokenizer do
 	it 'should tokenize "This is a [b]bold[/b] string"' do
 		str = 'This is a [b]bold[/b] string'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -27,9 +27,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is a [url=http://example.com]link[/url]"' do
 		str = 'This is a [url=http://example.com]link[/url]'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
-		
-		tokens.each { |t| puts t.inspect }
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 4
 		
@@ -51,7 +49,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [[b]improperly[/b] formed"' do
 		str = 'This is [[b]improperly[/b] formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -75,7 +73,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]]improperly[/b] formed"' do
 		str = 'This is [b]]improperly[/b] formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -98,7 +96,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[[/b] formed"' do
 		str = 'This is [b]improperly[[/b] formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -122,7 +120,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[/b]] formed"' do
 		str = 'This is [b]improperly[/b]] formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -145,7 +143,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b][improperly[/b] formed"' do
 		str = 'This is [b][improperly[/b] formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -168,7 +166,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This is [b]improperly[/b][ formed"' do
 		str = 'This is [b]improperly[/b][ formed'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -191,7 +189,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should tokenize "This here [ is a lone bracket' do
 		str = 'This here [ is a lone bracket'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 1
 		
@@ -201,7 +199,7 @@ describe RbbCode::Tokenizer do
 	
 	it 'should not differentiate between valid and invalid tags' do
 		str = 'This is an [foo]unrecognized[/foo] tag'
-		tokens = RbbCode::Tokenizer.new(str).tokenize
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
 		
 		tokens.length.should == 5
 		
@@ -221,5 +219,24 @@ describe RbbCode::Tokenizer do
 		
 		tokens[4].type.should == :text
 		tokens[4].text.should == ' tag'
+	end
+	
+	# Specific strings that have triggered bugs in the past
+	
+	it 'should tokenize "This [i]tag[//i] is malformed"' do
+		str = 'This [i]tag[//i] is malformed'
+		tokens = RbbCode::Tokenizer.new.tokenize(str)
+		
+		tokens.length.should == 3
+		
+		tokens[0].type.should == :text
+		tokens[0].text.should == 'This '
+		
+		tokens[1].type.should == :opening_tag
+		tokens[1].text.should == '[i]'
+		tokens[1].tag_name.should == 'i'
+		
+		tokens[2].type.should == :text
+		tokens[2].text.should == 'tag[//i] is malformed'
 	end
 end
