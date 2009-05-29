@@ -11,13 +11,14 @@ describe RbbCode::TreeMaker do
 		end
 		
 		it 'should make a tree from a string with one tag' do
-			str = 'This is [b]bold[/bold] text'
+			str = 'This is [b]bold[/b] text'
 			
 			expected = ExpectedTreeMaker.make do
-				text 'This is '
-				tag('b') { text 'bold' }
-				text ' text'
-				text ' foo'
+				tag('p') do
+					text 'This is '
+					tag('b') { text 'bold' }
+					text ' text'
+				end
 			end
 			
 			RbbCode::TreeMaker.new(@schema).make_tree(str).should match_tree(expected)

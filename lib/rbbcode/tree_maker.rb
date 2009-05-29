@@ -1,3 +1,5 @@
+require 'pp'
+
 module RbbCode
 	module CharCodes
 		CR_CODE = 13
@@ -58,7 +60,7 @@ module RbbCode
 		
 		def initialize(parent, tag_name, value = nil)
 			super(parent)
-			@name = tag_name
+			@tag_name = tag_name
 			@value = value
 		end
 		
@@ -88,7 +90,7 @@ module RbbCode
 		def ancestor_list(parent)
 			ancestors = []
 			while parent.is_a?(TagNode)
-				ancestors << parent
+				ancestors << parent.tag_name
 				parent = parent.parent
 			end
 			ancestors
@@ -112,6 +114,7 @@ module RbbCode
 			# is a block-level element, no problem: we'll be calling promote_block_level_elements
 			# later anyway.
 			current_parent = TagNode.new(tree, @schema.paragraph_tag_name)
+			tree << current_parent
 			current_token = ''
 			current_token_type = :unknown
 			str.each_byte do |char_code|
@@ -166,7 +169,7 @@ module RbbCode
 						end
 					end
 				when :possible_tag
-					case char_code
+					case char
 					when '['
 						current_parent << TextNode.new(current_parent, '[')
 						# No need to reset current_token or current_token_type
@@ -187,8 +190,10 @@ module RbbCode
 						current_token << char
 					elsif char == ']'
 						current_token << ']'
-						if @schema.tag(current_token).valid_in_context?(ancestor_list(current_parent))
-							current_parent = current_parent << TagNode.from_opening_bb_code(current_parent, current_token)
+						tag_node = TagNode.from_opening_bb_code(current_parent, current_token)
+						if @schema.tag(tag_node.tag_name).valid_in_context?(*ancestor_list(current_parent))
+							current_parent << tag_node
+							current_parent = tag_node
 							# else, don't do anything--the tag will be ignored
 						end
 						current_token_type = :unknown
