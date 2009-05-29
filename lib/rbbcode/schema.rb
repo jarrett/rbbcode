@@ -13,6 +13,12 @@ module RbbCode
 		'*'
 	]
 	
+	DEFAULT_BLOCK_LEVEL_ELEMENTS = [
+		'quote',
+		'list',
+		'*'
+	]
+	
 	class SchemaNode
 		def initialize(schema)
 			@schema = schema
@@ -117,6 +123,10 @@ module RbbCode
 			@no_text.delete(tag_name.to_s)
 		end
 		
+		def block_level?(tag_name)
+			DEFAULT_BLOCK_LEVEL_ELEMENTS.include?(tag_name.to_s)
+		end
+		
 		alias_method :allow_tags, :allow_tag
 		
 		def clear
@@ -151,6 +161,14 @@ module RbbCode
 			@required_parents = {}
 			@child_requirements = {}
 			@no_text = []
+		end
+		
+		def line_break_tag_name
+			'br'
+		end
+		
+		def paragraph_tag_name
+			'p'
 		end
 		
 		def require_parents(parents, child) #:nodoc:
