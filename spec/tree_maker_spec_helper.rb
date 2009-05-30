@@ -1,5 +1,25 @@
 require 'pp'
 
+module RbbCode
+	class RootNode
+		def == (other_node)
+			self.children == other_node.children
+		end
+	end
+	
+	class TagNode
+		def == (other_node)
+			self.tag_name == other_node.tag_name and self.children == other_node.children
+		end
+	end
+	
+	class TextNode
+		def == (other_node)
+			self.text == other_node.text
+		end
+	end
+end
+
 class ExpectedTreeMaker
 	include RbbCode
 	
@@ -44,7 +64,7 @@ module TreeMakerMatchers
 		
 		def matches?(target)
 			@target = target
-			equal_nodes?(@target, @expected_tree)
+			@target == @expected_tree
 		end
 		
 		def failure_message
@@ -56,22 +76,6 @@ module TreeMakerMatchers
 		end
 		
 		protected
-		
-		def equal_nodes?(node_1, node_2)
-			return false unless node_1.class == node_2.class
-			case node_1.class.to_s
-			when 'RbbCode::TextNode'
-				node_1.text == node_2.text
-			when 'RbbCode::RootNode', 'RbbCode::TagNode'
-				return false unless node_1.is_a?(RbbCode::RootNode) or node_1.tag_name == node_2.tag_name
-				node_1.children.each_with_index do |node_1_child, i|
-					unless equal_nodes?(node_1_child, node_2.children[i])
-						#return false
-					end
-				end
-				return true
-			end
-		end
 		
 		def pp_to_s(obj)
 			io = StringIO.new

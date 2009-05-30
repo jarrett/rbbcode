@@ -77,38 +77,6 @@ module RbbCode
 		end
 		
 		def make_tree(str)
-			tree = parse_str(str)
-			promote_block_level_elements(tree)
-		end
-		
-		protected
-		
-		def alphabetic_char?(char_code)
-			(char_code >= LOWER_A_CODE and char_code <= LOWER_Z_CODE) or (char_code >= UPPER_A_CODE and char_code <= UPPER_Z_CODE)
-		end
-		
-		def ancestor_list(parent)
-			ancestors = []
-			while parent.is_a?(TagNode)
-				ancestors << parent.tag_name
-				parent = parent.parent
-			end
-			ancestors
-		end
-		
-		def break_type(break_str)
-			if break_str.length > 2
-				:paragraph
-			elsif break_str.length == 1
-				:line_break
-			elsif break_str == "\r\n"
-				:line_break
-			else
-				:paragraph
-			end
-		end
-		
-		def parse_str(str)
 			tree = RootNode.new
 			# Initially, we open a paragraph tag. If it turns out that the first thing we encounter
 			# is a block-level element, no problem: we'll be calling promote_block_level_elements
@@ -149,14 +117,19 @@ module RbbCode
 					if char == CR_CODE or char_code == LF_CODE
 						current_token << char
 					else
-						if break_type(current_token) == :paragraph
-							# If the current parent isn't a paragraph, we have a problem:
-							# we're inside some other tag, and it hasn't been properly closed.
-							# So, we need to take care of that.
-							while current_parent.tag_name != @schema.paragraph_tag_name
+						if break_type(current_token) == :paragraph		
+							puts "Paragraph break found. Current tree:"
+							pp tree
+							unless @schema.block_level?(current_parent.tag_name)
+								# If the current parent isn't a paragraph or a block-level element,
+								# we have a problem:
+								# we're inside some other tag, and it hasn't been properly closed.
+								# So, we need to take care of that.
+								while current_parent.tag_name != @schema.paragraph_tag_name
+									current_parent = current_parent.parent
+								end
 								current_parent = current_parent.parent
 							end
-							current_parent = current_parent.parent
 						else # :line_break
 							current_parent << TagNode.new(current_parent, @schema.line_break_tag_name)
 						end
@@ -211,12 +184,12 @@ module RbbCode
 						current_token << char
 					elsif char == ']'
 						original_parent = current_parent
-						while current_parent.is_a?(TagNode) and current_parent.tag_name != current_token[1..-1]
+						while current_parent.is_a?(TagNode) and current_parent.tag_name != current_token[2..-1]
 							current_parent = current_parent.parent
 						end
 						if current_parent.is_a?(TagNode)
 							current_parent = current_parent.parent
-						else
+						else # current_parent is a RootNode
 							# we made it to the top of the tree, and never found the tag to close
 							# so we'll just ignore the closing tag altogether
 							current_parent = original_parent
@@ -233,31 +206,38 @@ module RbbCode
 					end
 				end
 			end
+			# Handle whatever's left in the current token
+			if current_token_type != :break
+				current_parent << TextNode.new(current_parent, current_token)
+			end
 			tree
 		end
 		
-		# Recurse through the tree. Any time a paragraph node is encountered, if the
-		# paragraph's first child is a block-level element, then that block-level element
-		# should become the paragraph's previous sibling.
-		#
-		# E.g.:
-		#
-		# p
-		#   "foo"
-		# p
-		#   list
-		#   "bar"
-		#
-		# should become:
-		#
-		# p
-		#   "foo"
-		# list
-		# p
-		#   "bar"
+		protected
 		
-		def promote_block_level_elements(node)
-			node
+		def alphabetic_char?(char_code)
+			(char_code >= LOWER_A_CODE and char_code <= LOWER_Z_CODE) or (char_code >= UPPER_A_CODE and char_code <= UPPER_Z_CODE)
+		end
+		
+		def ancestor_list(parent)
+			ancestors = []
+			while parent.is_a?(TagNode)
+				ancestors << parent.tag_name
+				parent = parent.parent
+			end
+			ancestors
+		end
+		
+		def break_type(break_str)
+			if break_str.length > 2
+				:paragraph
+			elsif break_str.length == 1
+				:line_break
+			elsif break_str == "\r\n"
+				:line_break
+			else
+				:paragraph
+			end
 		end
 	end
 end
