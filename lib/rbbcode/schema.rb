@@ -161,6 +161,7 @@ module RbbCode
 			@required_parents = {}
 			@child_requirements = {}
 			@no_text = []
+			use_defaults
 		end
 		
 		def line_break_tag_name

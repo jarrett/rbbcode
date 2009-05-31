@@ -1,21 +1,53 @@
-require 'pp'
-
 module RbbCode
 	class RootNode
 		def == (other_node)
-			self.children == other_node.children
+			self.class == other_node.class and self.children == other_node.children
+		end
+		
+		def print_tree(indent = 0)
+			output = ''
+			indent.times { output << "  " }
+			output << 'ROOT'
+			children.each do |child|
+				output << "\n" << child.print_tree(indent + 1)
+			end
+			output << "\n/ROOT"
+			output
 		end
 	end
 	
 	class TagNode
 		def == (other_node)
-			self.tag_name == other_node.tag_name and self.children == other_node.children
+			self.class == other_node.class and self.tag_name == other_node.tag_name and self.children == other_node.children
+		end
+		
+		def print_tree(indent = 0)
+			output = ''
+			indent.times { output << "  " }
+			if value.nil?
+				output << "[#{tag_name}]"
+			else
+				output << "[#{tag_name}=#{value}]"
+			end
+			children.each do |child|
+				output << "\n" << child.print_tree(indent + 1)
+			end
+			output << "\n"
+			indent.times { output << "  " }
+			output << "[/#{tag_name}]"
+			output
 		end
 	end
 	
 	class TextNode
 		def == (other_node)
-			self.text == other_node.text
+			self.class == other_node.class and self.text == other_node.text
+		end
+		
+		def print_tree(indent = 0)
+			output = ''
+			indent.times { output << "  " }
+			output << '"' << text << '"'
 		end
 	end
 end
@@ -68,20 +100,11 @@ module TreeMakerMatchers
 		end
 		
 		def failure_message
-			"Expected:\n\n#{pp_to_s(@expected_tree)}\n\nbut got:\n\n#{pp_to_s(@target)}"
+			"Expected:\n\n#{@expected_tree.print_tree}\n\nbut got:\n\n#{@target.print_tree}"
 		end
 		
 		def negative_failure_message
-			"Expected anything other than:\n\n#{pp_to_s(@expected_tree)}"
-		end
-		
-		protected
-		
-		def pp_to_s(obj)
-			io = StringIO.new
-			PP.pp(obj, io)
-			io.rewind
-			io.read
+			"Expected anything other than:\n\n#{@expected_tree.print_tree}"
 		end
 	end
 	

@@ -46,14 +46,14 @@ describe RbbCode::TreeMaker do
 		end
 
 		it 'should create paragraph tags' do
-			str = "This is a paragraph.This is another."
+			str = "This is a paragraph.\n\nThis is another."
 			
 			expected = ExpectedTreeMaker.make do
 				tag('p') do
-					text 'This is a paragraph'
+					text 'This is a paragraph.'
 				end
 				tag('p') do
-					text 'This is another'
+					text 'This is another.'
 				end
 			end
 			
@@ -72,6 +72,19 @@ describe RbbCode::TreeMaker do
 				end
 				tag('p') do
 					text 'with some text after it'
+				end
+			end
+		end
+		
+		it 'should store tag values' do
+			str = 'This is a [url=http://google.com]link[/url]'
+			
+			expect_tree(str) do
+				tag('p') do
+					text 'This is a '
+					tag('url', 'http://google.com') do
+						text 'link'
+					end
 				end
 			end
 		end
