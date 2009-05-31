@@ -18,7 +18,7 @@ module RbbCode
 	
 	class TagNode
 		def == (other_node)
-			self.class == other_node.class and self.tag_name == other_node.tag_name and self.children == other_node.children
+			self.class == other_node.class and self.tag_name == other_node.tag_name and self.value == other_node.value and self.children == other_node.children
 		end
 		
 		def print_tree(indent = 0)
