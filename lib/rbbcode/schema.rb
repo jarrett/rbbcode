@@ -205,7 +205,7 @@ module RbbCode
 			SchemaText.new(self)
 		end
 		
-		def text_valid_in_context?(ancestors)
+		def text_valid_in_context?(*ancestors)
 			if @no_text.include?(ancestors[0].to_s)
 				return false
 			end

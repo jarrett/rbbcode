@@ -158,11 +158,15 @@ module RbbCode
 				when :text
 					case char
 					when "["
-						current_parent << TextNode.new(current_parent, current_token)
+						if @schema.text_valid_in_context?(*ancestor_list(current_parent))
+							current_parent << TextNode.new(current_parent, current_token)
+						end
 						current_token = '['
 						current_token_type = :possible_tag
 					when "\r", "\n"
-						current_parent << TextNode.new(current_parent, current_token)
+						if @schema.text_valid_in_context?(*ancestor_list(current_parent))
+							current_parent << TextNode.new(current_parent, current_token)
+						end
 						current_token = char
 						current_token_type = :break
 					else
@@ -185,8 +189,18 @@ module RbbCode
 							new_paragraph_node = TagNode.new(current_parent, @schema.paragraph_tag_name)
 							current_parent << new_paragraph_node
 							current_parent = new_paragraph_node
-						else # :line_break
-							current_parent << TagNode.new(current_parent, @schema.line_break_tag_name)
+						else # line break
+							prev_sibling = current_parent.children.last
+							if prev_sibling.is_a?(TagNode) and @schema.block_level?(prev_sibling.tag_name)
+								# Although the input only contains a single newline, we should
+								# interpret is as the start of a new paragraph, because the last
+								# thing we encountered was a block-level element.
+								new_paragraph_node = TagNode.new(current_parent, @schema.paragraph_tag_name)
+								current_parent << new_paragraph_node
+								current_parent = new_paragraph_node
+							elsif @schema.tag(@schema.line_break_tag_name).valid_in_context?(*ancestor_list(current_parent))
+								current_parent << TagNode.new(current_parent, @schema.line_break_tag_name)
+							end
 						end
 						if char == '['
 							current_token = '['
@@ -220,6 +234,11 @@ module RbbCode
 						current_token << ']'
 						tag_node = TagNode.from_opening_bb_code(current_parent, current_token)
 						if @schema.block_level?(tag_node.tag_name) and current_parent.tag_name == @schema.paragraph_tag_name
+							# If there is a line break before this, it's superfluous and should be deleted
+							prev_sibling = current_parent.children.last
+							if prev_sibling.is_a?(TagNode) and prev_sibling.tag_name == @schema.line_break_tag_name
+								current_parent.children.pop
+							end
 							# Promote a block-level element
 							current_parent = current_parent.parent
 							tag_node.parent = current_parent
