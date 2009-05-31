@@ -46,26 +46,22 @@ describe RbbCode::Parser do
 		end
 		
 		it 'should not put <p> tags around <ul> tags' do
-			@parser.parse("Text.\n\n[list]\n[*]Foo[/*]\n[*]Bar[/*]\n[/list]\n\nMore text.").should == '<p>Text</p><ul><li>Foo</li><li>Bar</li></ul><p>More text.</p>'
+			@parser.parse("Text.\n\n[list]\n[*]Foo[/*]\n[*]Bar[/*]\n[/list]\n\nMore text.").should == '<p>Text.</p><ul><li>Foo</li><li>Bar</li></ul><p>More text.</p>'
 		end
 		
 		it 'should ignore forbidden or unrecognized tags' do
 			@parser.parse('There is [foo]no such thing[/foo] as a foo tag').should == '<p>There is no such thing as a foo tag</p>'
 		end
 		
-		it 'should ignore improperly matched tags' do
-			# By default, the [i] tag cannot be nested, so
-			@parser.parse('This [i]i tag[i] is not properly matched').should == '<p>This [i]i tag[i] is not properly matched</p>'
-			@parser.parse('This i tag[/i] is not properly matched').should == '<p>This i tag[/i] is not properly matched</p>'
-		end
-		
-		it 'should recover gracefully from malformed tags' do
+		it 'should recover gracefully from malformed or improperly matched tags' do
 			@parser.parse('This [i/]tag[/i] is malformed').should == '<p>This [i/]tag is malformed</p>'
 			@parser.parse('This [i]]tag[/i] is malformed').should == '<p>This <em>]tag</em> is malformed</p>'
 			@parser.parse('This [i]tag[[/i] is malformed').should == '<p>This <em>tag[</em> is malformed</p>'
 			@parser.parse('This [i]tag[//i] is malformed').should == '<p>This <em>tag[//i] is malformed</em></p>'
 			@parser.parse('This [[i]tag[/i] is malformed').should == '<p>This [<em>tag</em> is malformed</p>'
 			@parser.parse('This [i]tag[/i]] is malformed').should == '<p>This <em>tag</em>] is malformed</p>'
+			@parser.parse('This [i]i tag[i] is not properly matched').should == '<p>This <em>i tag is not properly matched</em></p>'
+			@parser.parse('This i tag[/i] is not properly matched').should == '<p>This i tag is not properly matched</p>'
 		end
 		
 		it 'should escape < and >' do

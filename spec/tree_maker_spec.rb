@@ -74,6 +74,23 @@ describe RbbCode::TreeMaker do
 			end
 		end
 		
+		it 'should not insert br tags in the midst of block-level elements' do
+			str = "List:\n[list]\n[*]Foo[/*]\n[*]Bar[/*]\n[/list]\nText after list"
+			
+			expect_tree(str) do
+				tag('p') do
+					text 'List:'
+				end
+				tag('list') do
+					tag('*') { text 'Foo' }
+					tag('*') { text 'Bar' }
+				end
+				tag('p') do
+					text 'Text after list'
+				end
+			end
+		end
+		
 		it 'should store tag values' do
 			str = 'This is a [url=http://google.com]link[/url]'
 			
