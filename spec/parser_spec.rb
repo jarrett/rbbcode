@@ -8,7 +8,7 @@ describe RbbCode::Parser do
 		
 		it 'should create paragraphs and line breaks' do
 			bb_code = "This is one paragraph.\n\nThis is another paragraph."
-			@parser.parse(bb_code).should == '<p>This is one line.</p><p>This is another line.</p>'
+			@parser.parse(bb_code).should == '<p>This is one paragraph.</p><p>This is another paragraph.</p>'
 			bb_code = "This is one line.\nThis is another line."
 			@parser.parse(bb_code).should == '<p>This is one line.<br/>This is another line.</p>'
 		end

@@ -1,14 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/tree_maker_spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/node_spec_helper')
 require 'pp'
 
 describe RbbCode::TreeMaker do
-	include TreeMakerMatchers
+	include NodeMatchers
 	
 	context '#make_tree' do
 		def expect_tree(str, &block)
-			expected = ExpectedTreeMaker.make(&block)
-			@tree_maker.make_tree(str).should match_tree(expected)
+			expected = NodeBuilder.build(&block)
+			@tree_maker.make_tree(str).should match_node(expected)
 		end
 		
 		before :each do
@@ -48,7 +48,7 @@ describe RbbCode::TreeMaker do
 		it 'should create paragraph tags' do
 			str = "This is a paragraph.\n\nThis is another."
 			
-			expected = ExpectedTreeMaker.make do
+			expect_tree(str) do
 				tag('p') do
 					text 'This is a paragraph.'
 				end
@@ -56,8 +56,6 @@ describe RbbCode::TreeMaker do
 					text 'This is another.'
 				end
 			end
-			
-			@tree_maker.make_tree(str).should match_tree(expected)
 		end
 
 		it 'should not put block-level elements inside paragraph tags' do

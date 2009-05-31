@@ -7,8 +7,12 @@ module RbbCode
 		def parse(str)
 			str = escape_html_tags(str)
 			
-			tree_maker = @config[:tree_maker] || RbbCode::TreeMaker.new
+			schema = @config[:schema] || RbbCode::Schema.new
 			
+			tree_maker = @config[:tree_maker] || RbbCode::TreeMaker.new(schema)
+			tree = tree_maker.make_tree(str)
+			
+			html_maker = @config[:html_maker] || RbbCode::HtmlMaker.new
 			html_maker.make_html(tree)
 		end
 		

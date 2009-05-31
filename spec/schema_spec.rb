@@ -17,8 +17,7 @@ describe RbbCode::Schema do
 			'img',
 			'code',
 			'quote',
-			'list',
-			'*'
+			'list'
 		].each do |tag|
 			schema.tag(tag).valid_in_context?().should == true
 		end
