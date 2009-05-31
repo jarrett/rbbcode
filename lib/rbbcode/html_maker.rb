@@ -1,5 +1,7 @@
 # TODO: Lists must be surrounded by </p> and <p>
 
+require 'cgi'
+
 module RbbCode
 	DEFAULT_TAG_MAPPINGS = {
 		'p' => 'p',
@@ -55,12 +57,19 @@ module RbbCode
 		end
 		
 		def html_from_img_tag(node)
-			"<img src=\"\" alt=\"\"/>"
-			raise 'not implemented'
+			src = sanitize_url(node.inner_bb_code)
+			content_tag('img', nil, {'src' => src, 'alt' => ''})
 		end
 
 		def html_from_url_tag(node)
-			raise 'not implemented'
+			inner_bb_code = node.inner_bb_code
+			if node.value.nil?
+				url = inner_bb_code
+			else
+				url = node.value
+			end
+			url = sanitize_url(url)
+			content_tag('a', inner_bb_code, {'href' => url})
 		end
 		
 		def map_tag_name(tag_name)
@@ -68,6 +77,17 @@ module RbbCode
 				raise "No tag mapping for '#{tag_name}'"
 			end
 			DEFAULT_TAG_MAPPINGS[tag_name]
+		end
+		
+		def sanitize_url(url)
+			# Prepend a protocol if there isn't one
+			unless url.match(/^[a-zA-Z]+:\/\//)
+				url = 'http://' + url
+			end
+			# Replace all functional permutations of "javascript:" with a hex-encoded version of the same
+			url.gsub(/(\s*j\s*\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*):/i) do |match_str|
+				CGI::escape($1) + '%3A'
+			end
 		end
 	end
 end

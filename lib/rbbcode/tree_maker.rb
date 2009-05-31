@@ -48,6 +48,10 @@ module RbbCode
 		end
 		
 		attr_accessor :text
+		
+		def to_bb_code
+			@text
+		end
 	end
 	
 	class TagNode < Node
@@ -66,6 +70,21 @@ module RbbCode
 			super(parent)
 			@tag_name = tag_name
 			@value = value
+		end
+		
+		def inner_bb_code
+			@children.inject('') do |output, child|
+				output << child.to_bb_code
+			end
+		end
+		
+		def to_bb_code
+			if @value.nil?
+				output = "[#{@tag_name}]"
+			else
+				output = "[#{@tag_name}=#{@value}]"
+			end
+			output << inner_bb_code << "[/#{@tag_name}]"
 		end
 		
 		attr_reader :tag_name
@@ -266,7 +285,6 @@ module RbbCode
 						current_token << char
 					elsif char == ']'
 						original_parent = current_parent
-						puts current_token[2..-1]
 						while current_parent.is_a?(TagNode) and current_parent.tag_name != current_token[2..-1]
 							current_parent = current_parent.parent
 						end
