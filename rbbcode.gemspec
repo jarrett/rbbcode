@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 	s.name = 'rbbcode'
 	s.version = "0.1.0"
-	s.date = File.utime(__FILE__)
+	s.date = File.mtime('rbbcode.gemspec')
 	s.authors = ['Jarrett Colby']
 	s.email = 'jarrett@uchicago.edu'
 	s.summary = 'Ruby BB Code parser'
