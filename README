@@ -10,4 +10,4 @@ require 'rbbcode'
 bb_code = 'This is [b]bold[/b] text'
 parser = RbbCode::Parser.new
 html = parser.parse(bb_code)
-# => 'This is <strong>bold</strong> text'
+# => '<p>This is <strong>bold</strong> text</p>'
