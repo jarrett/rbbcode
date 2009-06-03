@@ -71,5 +71,14 @@ describe RbbCode::Parser do
 		it 'should work when the string begins with a tag' do
 			@parser.parse('[b]This is bold[/b]').should == '<p><strong>This is bold</strong></p>'
 		end
+		
+		# Bugs reported and fixed:
+		
+		it 'should not leave an open <em> tag when parsing "[b][u]te[i][/u]st[/i][/b][/b]"' do
+			# Thanks to Vizakenjack for finding this. It creates an empty <em> tag. This may or may not be the desired output, but it does not seem
+			# to invalidate the XHTML. (The <u> element does, though. It will be replaced in a later version with <span style="text-decoration:underline;">)
+			# Since the empty <em> tag is valid, it is tentatively marked as a non-bug.
+			@parser.parse('[b][u]te[i][/u]st[/i][/b][/b]').should == '<p><strong><u>te<em/></u>st</strong></p>'
+		end
 	end
 end
