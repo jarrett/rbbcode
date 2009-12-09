@@ -62,14 +62,16 @@ module RbbCode
 		end
 
 		def html_from_url_tag(node)
-			inner_bb_code = node.inner_bb_code
 			if node.value.nil?
-				url = inner_bb_code
+				url = node.inner_bb_code
 			else
 				url = node.value
 			end
 			url = sanitize_url(url)
-			content_tag('a', inner_bb_code, {'href' => url})
+			inner_html = node.children.inject('') do |output, child|
+				output + make_html(child)
+			end
+			content_tag('a', inner_html, {'href' => url})
 		end
 		
 		def map_tag_name(tag_name)

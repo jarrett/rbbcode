@@ -86,7 +86,14 @@ describe RbbCode::Parser do
 		end
 		
 		it 'should not raise when parsing "Are you a real phan yet?\r\n\r\n[ ] Yes\r\n[X] No"' do
+			# Thanks to sblackstone for finding this.
 			@parser.parse("Are you a real phan yet?\r\n\r\n[ ] Yes\r\n[X] No")
+		end
+		
+		it 'should support images inside links' do
+			# Thanks to Vizakenjack for finding this.
+			@parser.parse('[url=http://www.google.com][img]http://www.123.com/123.png[/img][/url]').should ==
+				'<p><a href="http://www.google.com"><img src="http://www.123.com/123.png" alt=""/></a></p>'
 		end
 	end
 end
