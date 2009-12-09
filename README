@@ -11,3 +11,36 @@ bb_code = 'This is [b]bold[/b] text'
 parser = RbbCode::Parser.new
 html = parser.parse(bb_code)
 # => '<p>This is <strong>bold</strong> text</p>'
+
+Customizing
+===========
+
+You can customize RbbCode by subclassing HtmlMaker and/or by passing configuration directives to a Schema object.
+
+HtmlMaker can be extended by adding methods like this:
+
+class MyHtmlMaker < RbbCode::HtmlMaker
+	def html_from_TAGNAME_tag(node)
+		# ...
+	end
+end
+
+...where TAGNAME should be replaced with the name of the tag. The method should accept an RbbCode::TagNode and return HTML as a string. (See tree_maker.rb for the definition of RbbCode::TagNode.) Anytime the parser encounters the specified tag, it will call your method and insert the returned HTML into the output.
+
+Now you just have to tell the Parser object to use an instance of your custom subclass instead of the default HtmlMaker:
+
+my_html_maker = MyHtmlMaker.new
+parser = RbbCode::Parser.new(:html_maker => my_html_maker)
+
+RbbCode removes invalid markup by comparing the input against a Schema object. The Schema is much like a DTD in XML. You can set your own rules and change the default ones by calling configuration methods on a Schema instance. Look at Schema#use_defaults in schema.rb for examples.
+
+Normally, RbbCode instantiates Schema behind the scenes, but if you want to customize it, you'll have to instantiate it yourself and pass the instance to the Parser object:
+
+schema = RbbCode::Schema.new
+schema.tag('quote').may_not_be_nested # Or whatever other configuration methods you want to call
+parser = RbbCode::Parser.new(:schema => schema)
+
+Unicode Support
+===============
+
+UTF-8 compatibility is a high priority for this project. RbbCode aims to be fully compatible with UTF-8, but not with other multibyte encodings. As of the most recent release, UTF-8 support has been tested to a limited extent. It is possible that there are some hidden gotchas. Please report any bugs you may find.
