@@ -44,3 +44,13 @@ Unicode Support
 ===============
 
 UTF-8 compatibility is a high priority for this project. RbbCode aims to be fully compatible with UTF-8, but not with other multibyte encodings. As of the most recent release, UTF-8 support has been tested to a limited extent. It is possible that there are some hidden gotchas. Please report any bugs you may find.
+
+Installation
+============
+
+    gem install rbbcode
+
+If that doesn't work, it's probably because RbbCode is hosted on Gemcutter, and your computer doesn't know about Gemcutter yet. To fix that:
+
+    gem install gemcutter
+	gem tumble
