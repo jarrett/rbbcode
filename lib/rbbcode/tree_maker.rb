@@ -173,6 +173,12 @@ module RbbCode
 			tree << current_parent
 			current_token = ''
 			current_token_type = :unknown
+			# It may seem naive to use each_byte. What about Unicode? So long as we're using UTF-8, none of the
+			# BB Code control characters will appear as part of multibyte characters, because UTF-8 doesn't allow
+			# the range 0x00-0x7F in multibyte chars. As for the multibyte characters themselves, yes, they will
+			# be temporarily split up as we append bytes onto the text nodes. But as of yet, I haven't found
+			# a way that this could cause a problem. The bytes always come back together again. (It would be a problem
+			# if we tried to count the characters for some reason, but we don't do that.)
 			str.each_byte do |char_code|
 				char = char_code.chr
 				case current_token_type

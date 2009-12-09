@@ -1,7 +1,9 @@
+$KCODE = 'u'
+
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe RbbCode::Parser do
-	context '#parse_bb_code' do
+	context '#parse' do
 		before :each do
 			@parser = RbbCode::Parser.new
 		end
@@ -70,6 +72,10 @@ describe RbbCode::Parser do
 		
 		it 'should work when the string begins with a tag' do
 			@parser.parse('[b]This is bold[/b]').should == '<p><strong>This is bold</strong></p>'
+		end
+		
+		it 'should handle UTF8' do
+			@parser.parse("Here's some UTF-8: [i]א[/i]. And here's some ASCII text.").should == "<p>Here's some UTF-8: <em>א</em>. And here's some ASCII text.</p>"
 		end
 		
 		# Bugs reported and fixed:
