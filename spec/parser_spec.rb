@@ -78,5 +78,9 @@ describe RbbCode::Parser do
 			# Thanks to Vizakenjack for finding this. It creates an empty <em> tag. Browsers don't like this, so we need to replace it.
 			@parser.parse('foo [i][/i] bar').should match(/<p>foo +bar<\/p>/)
 		end
+		
+		it 'should not raise when parsing "Are you a real phan yet?\r\n\r\n[ ] Yes\r\n[X] No"' do
+			@parser.parse("Are you a real phan yet?\r\n\r\n[ ] Yes\r\n[X] No")
+		end
 	end
 end

@@ -260,7 +260,7 @@ module RbbCode
 						if tag_name_char?(char_code)
 							current_token_type = :opening_tag
 							current_token << char
-						elsif tag_name
+						else
 							current_token_type = :text
 							current_token << char
 						end
