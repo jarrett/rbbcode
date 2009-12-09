@@ -1,6 +1,9 @@
 module RbbCode
 	class Parser
 		def initialize(config = {})
+			config.each_key do |key|
+				raise(ArgumentError, "Unknown option #{key}") unless known_options.include?(key)
+			end
 			@config = config
 		end
 		
@@ -20,6 +23,10 @@ module RbbCode
 		
 		def escape_html_tags(str)
 			str.gsub('<', '&lt;').gsub('>', '&gt;')
+		end
+		
+		def known_options
+			[:schema, :tree_maker, :html_maker]
 		end
 	end
 end
