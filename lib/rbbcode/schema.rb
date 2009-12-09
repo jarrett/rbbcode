@@ -50,6 +50,10 @@ module RbbCode
 			self
 		end
 		
+		def may_not_be_empty
+			@schema.forbid_emptiness(@name)
+		end
+		
 		def may_not_be_nested
 			@schema.forbid_descent(@name, @name)
 			self
@@ -111,6 +115,10 @@ module RbbCode
 			end
 		end
 		
+		def allow_emptiness(tag_name)
+			@never_empty.delete(tag_name.to_s)
+		end
+		
 		def allow_tag(*tag_names)
 			tag_names.each do |tag_name|
 				unless @allowed_tags.include?(tag_name.to_s)
@@ -131,6 +139,7 @@ module RbbCode
 		
 		def clear
 			@allowed_tags = []
+			@never_empty = []
 			@forbidden_descent = {}
 			@required_parents = {}
 			@no_text = []
@@ -147,6 +156,10 @@ module RbbCode
 			end
 		end
 		
+		def forbid_emptiness(tag_name)
+			@never_empty << tag_name.to_s unless @never_empty.include?(tag_name.to_s)
+		end
+		
 		def forbid_tag(name)
 			@allowed_tags.delete(name.to_s)
 		end
@@ -160,6 +173,7 @@ module RbbCode
 			@forbidden_descent = {}
 			@required_parents = {}
 			@child_requirements = {}
+			@never_empty = []
 			@no_text = []
 			use_defaults
 		end
@@ -183,6 +197,10 @@ module RbbCode
 		
 		def tag(name)
 			SchemaTag.new(self, name)
+		end
+		
+		def tag_may_be_empty?(tag_name)
+			!@never_empty.include?(tag_name.to_s)
 		end
 		
 		def tag_valid_in_context?(tag_name, ancestors)
@@ -220,8 +238,11 @@ module RbbCode
 			tag('br').must_be_empty
 			tag('p').may_not_be_nested
 			tag('b').may_not_be_nested
+			tag('b').may_not_be_empty
 			tag('i').may_not_be_nested
+			tag('i').may_not_be_empty
 			tag('u').may_not_be_nested
+			tag('u').may_not_be_empty
 			tag('url').may_not_be_nested
 			tag('img').may_not_be_nested
 			tag('code').may_not_be_nested

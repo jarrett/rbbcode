@@ -100,7 +100,11 @@ module RbbCode
 		end
 		
 		def make_tree(str)
-			delete_empty_paragraphs(parse_str(str))
+			delete_empty_paragraphs!(
+				delete_invalid_empty_tags!(
+					parse_str(str)
+				)
+			)
 		end
 		
 		protected
@@ -126,11 +130,11 @@ module RbbCode
 			end
 		end
 		
-		def delete_empty_paragraphs(node)
+		def delete_empty_paragraphs!(node)
 			node.children.reject! do |child|
 				if child.is_a?(TagNode)
 					if !child.children.empty?
-						delete_empty_paragraphs(child)
+						delete_empty_paragraphs!(child)
 						false
 					elsif child.tag_name == @schema.paragraph_tag_name
 						# It's an empty paragraph tag, so the reject! block should return true
@@ -140,6 +144,21 @@ module RbbCode
 					end
 				else
 					false
+				end
+			end
+			node
+		end
+		
+		# The schema defines some tags that may not be empty. This method removes any such empty tags from the tree.
+		def delete_invalid_empty_tags!(node)
+			node.children.reject! do |child|
+				if child.is_a?(TagNode)
+					if child.children.empty? and !@schema.tag_may_be_empty?(child.tag_name)
+						true
+					else
+						delete_invalid_empty_tags!(child)
+						false
+					end
 				end
 			end
 			node
