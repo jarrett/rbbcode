@@ -87,9 +87,10 @@ module RbbCode
 				url = 'http://' + url
 			end
 			# Replace all functional permutations of "javascript:" with a hex-encoded version of the same
-			url.gsub(/(\s*j\s*\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*):/i) do |match_str|
-				CGI::escape($1) + '%3A'
+			url.gsub!(/(\s*j\s*\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\s*):/i) do |match_str|
+				'%' + $1.unpack('H2' * $1.length).join('%').upcase + '%3A'
 			end
+			url.gsub('"', '%22')
 		end
 	end
 end

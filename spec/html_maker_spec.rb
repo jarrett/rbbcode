@@ -36,12 +36,12 @@ describe RbbCode::HtmlMaker do
 
 		it 'should not allow JavaScript in URLs' do
 			urls = {
-				'javascript:alert("foo");' => 'http://javascript%3Aalert("foo");',
-				'j a v a script:alert("foo");' => 'http://j+a+v+a+script%3Aalert("foo");',
-				' javascript:alert("foo");' => 'http://+javascript%3Aalert("foo");',
-				'JavaScript:alert("foo");' => 'http://JavaScript%3Aalert("foo");' ,
-				"java\nscript:alert(\"foo\");" => 'http://java%0Ascript%3Aalert("foo");',
-				"java\rscript:alert(\"foo\");" => 'http://java%0Dscript%3Aalert("foo");'
+				'javascript:alert("1");' => 'http://%6A%61%76%61%73%63%72%69%70%74%3Aalert(%221%22);',
+				'j a v a script:alert("2");' => 'http://%6A%20%61%20%76%20%61%20%73%63%72%69%70%74%3Aalert(%222%22);',
+				' javascript:alert("3");' => 'http://%20%6A%61%76%61%73%63%72%69%70%74%3Aalert(%223%22);',
+				'JavaScript:alert("4");' => 'http://%4A%61%76%61%53%63%72%69%70%74%3Aalert(%224%22);',
+				"java\nscript:alert(\"5\");" => 'http://%6A%61%76%61%0A%73%63%72%69%70%74%3Aalert(%225%22);',
+				"java\rscript:alert(\"6\");" => 'http://%6A%61%76%61%0D%73%63%72%69%70%74%3Aalert(%226%22);'
 			}
 			
 			# url tag
@@ -62,6 +62,16 @@ describe RbbCode::HtmlMaker do
 						tag('img') do
 							text evil_url
 						end
+					end
+				end
+			end
+		end
+		
+		it 'should hex-encode double-quotes in the URL' do
+			expect_html('<p><a href="http://example.com/foo%22bar">Foo</a></p>') do
+				tag('p') do
+					tag('url', 'http://example.com/foo"bar') do
+						text 'Foo'
 					end
 				end
 			end
