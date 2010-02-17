@@ -97,6 +97,7 @@ Feature Requests vs Bugs
 ========================
 
 Examples of bugs:
+
 - Executable JavaScript appears in the output
 - The output is not a valid XHTML fragment
 - RbbCode fails to support common BBCode syntax, as exemplified in http://en.wikipedia.org/wiki/BBCode
@@ -104,6 +105,7 @@ Examples of bugs:
 - Any of the specs fail
 
 Example of feature requests:
+
 - You want support for more tags. RbbCode lets you define your own tags. So the absence of, say, the "color" tag in the default parser is not a bug
 - You want to support uncommon BBCode syntax, i.e. something you wouldn't see on http://en.wikipedia.org/wiki/BBCode
 
