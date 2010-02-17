@@ -12,13 +12,13 @@ RbbCode validates and cleans input. It supports customizable schemas so you can 
 
 Example usage:
 
-  require 'rubygems'
-  require 'rbbcode'
-  
-  bb_code = 'This is [b]bold[/b] text'
-  parser = RbbCode::Parser.new
-  html = parser.parse(bb_code)
-  # => '<p>This is <strong>bold</strong> text</p>'
+	require 'rubygems'
+	require 'rbbcode'
+
+	bb_code = 'This is [b]bold[/b] text'
+	parser = RbbCode::Parser.new
+	html = parser.parse(bb_code)
+	# => '<p>This is <strong>bold</strong> text</p>'
 
 Customizing
 ===========
@@ -27,26 +27,26 @@ You can customize RbbCode by subclassing HtmlMaker and/or by passing configurati
 
 HtmlMaker can be extended by adding methods like this:
 
-  class MyHtmlMaker < RbbCode::HtmlMaker
-    def html_from_TAGNAME_tag(node)
-      # ...
-    end
-  end
+	class MyHtmlMaker < RbbCode::HtmlMaker
+		def html_from_TAGNAME_tag(node)
+			# ...
+		end
+	end
 
 ...where TAGNAME should be replaced with the name of the tag. The method should accept an RbbCode::TagNode and return HTML as a string. (See tree_maker.rb for the definition of RbbCode::TagNode.) Anytime the parser encounters the specified tag, it will call your method and insert the returned HTML into the output.
 
 Now you just have to tell the Parser object to use an instance of your custom subclass instead of the default HtmlMaker:
 
-  my_html_maker = MyHtmlMaker.new
-  parser = RbbCode::Parser.new(:html_maker => my_html_maker)
+	my_html_maker = MyHtmlMaker.new
+	parser = RbbCode::Parser.new(:html_maker => my_html_maker)
 
 RbbCode removes invalid markup by comparing the input against a Schema object. The Schema is much like a DTD in XML. You can set your own rules and change the default ones by calling configuration methods on a Schema instance. Look at Schema#use_defaults in schema.rb for examples.
 
 Normally, RbbCode instantiates Schema behind the scenes, but if you want to customize it, you'll have to instantiate it yourself and pass the instance to the Parser object:
 
-  schema = RbbCode::Schema.new
-  schema.tag('quote').may_not_be_nested # Or whatever other configuration methods you want to call
-  parser = RbbCode::Parser.new(:schema => schema)
+	schema = RbbCode::Schema.new
+	schema.tag('quote').may_not_be_nested # Or whatever other configuration methods you want to call
+	parser = RbbCode::Parser.new(:schema => schema)
 
 Unicode Support
 ===============
@@ -64,12 +64,12 @@ http://en.wikipedia.org/wiki/BBCode
 
 From that, I extracted some rules for "common" BBCode syntax. Here are the rules.
 
-Text gets wrapped in <p> tags unless it's marked up as some other block-level element such as a list. A single line break becomes a <br/>. Two line breaks mark the end of a paragraph, thus a closing </p> and possibly an opening <p>.
+Text gets wrapped in `<p>` tags unless it's marked up as some other block-level element such as a list. A single line break becomes a `<br/>`. Two line breaks mark the end of a paragraph, thus a closing `</p>` and possibly an opening `<p>`.
 
 Tags must be in one of the following forms:
 
-  [tagname]Text[/tagname]
-  [tagname=value]Text[/tagname]
+	[tagname]Text[/tagname]
+	[tagname=value]Text[/tagname]
 
 As you can infer from the second example, RbbCode does not support attributes like in HTML and XML. Rather, a tag can have a single "value," which is similar to an anonymous attribute. This is how [url] and [img] tags work, for example.
 
@@ -112,9 +112,9 @@ Do not open an issue for a feature request. Just send a message on Github.
 Installation
 ============
 
-  gem install rbbcode
+	gem install rbbcode
 
 If that doesn't work, it's probably because RbbCode is hosted on Gemcutter, and your computer doesn't know about Gemcutter yet. To fix that:
 
-  gem install gemcutter
-  gem tumble
+	gem install gemcutter
+	gem tumble
