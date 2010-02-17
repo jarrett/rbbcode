@@ -60,7 +60,7 @@ BBCode Syntax
 
 As of this writing, there is no official BBCode standard. There are reference implementations, but they differ quite substantially. Wikipedia seemed like the only source with any claim to being canonical, so I followed its examples. The Wikipedia article is at:
 
-[http://en.wikipedia.org/wiki/BBCode]
+http://en.wikipedia.org/wiki/BBCode
 
 From that, I extracted some rules for "common" BBCode syntax. Here are the rules.
 
@@ -105,7 +105,7 @@ Examples of bugs:
 
 Example of feature requests:
 - You want support for more tags. RbbCode lets you define your own tags. So the absence of, say, the "color" tag in the default parser is not a bug
-- You want to support uncommon BBCode syntax, i.e. something you wouldn't see on [http://en.wikipedia.org/wiki/BBCode]
+- You want to support uncommon BBCode syntax, i.e. something you wouldn't see on http://en.wikipedia.org/wiki/BBCode
 
 Do not open an issue for a feature request. Just send a message on Github.
 
