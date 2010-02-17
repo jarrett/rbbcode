@@ -1,3 +1,11 @@
+The gem is fixed!
+=================
+
+Due to a defective gemspec, at least one version (0.1.3) wasn't packaging the lib directory in the .gem file. This has been corrected in 0.1.4. Sorry for the delay in fixing this.
+
+About RbbCode
+=============
+
 RbbCode is a customizable Ruby library for parsing BB Code.
 
 RbbCode validates and cleans input. It supports customizable schemas so you can set rules about what tags are allowed where. The default rules are designed to ensure valid HTML output.
@@ -19,18 +27,18 @@ You can customize RbbCode by subclassing HtmlMaker and/or by passing configurati
 
 HtmlMaker can be extended by adding methods like this:
 
-class MyHtmlMaker < RbbCode::HtmlMaker
-  def html_from_TAGNAME_tag(node)
-    # ...
+  class MyHtmlMaker < RbbCode::HtmlMaker
+    def html_from_TAGNAME_tag(node)
+      # ...
+    end
   end
-end
 
 ...where TAGNAME should be replaced with the name of the tag. The method should accept an RbbCode::TagNode and return HTML as a string. (See tree_maker.rb for the definition of RbbCode::TagNode.) Anytime the parser encounters the specified tag, it will call your method and insert the returned HTML into the output.
 
 Now you just have to tell the Parser object to use an instance of your custom subclass instead of the default HtmlMaker:
 
-my_html_maker = MyHtmlMaker.new
-parser = RbbCode::Parser.new(:html_maker => my_html_maker)
+  my_html_maker = MyHtmlMaker.new
+  parser = RbbCode::Parser.new(:html_maker => my_html_maker)
 
 RbbCode removes invalid markup by comparing the input against a Schema object. The Schema is much like a DTD in XML. You can set your own rules and change the default ones by calling configuration methods on a Schema instance. Look at Schema#use_defaults in schema.rb for examples.
 
