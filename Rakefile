@@ -9,6 +9,8 @@ begin
 		gemspec.authors = ['Jarrett Colby']
 		gemspec.files = Dir['lib/**/*.rb']
 		gemspec.test_files = Dir['spec/**/*.rb']
+		gemspec.add_development_dependency 'rspec', '>= 1.3.0'
+		gemspec.add_dependency 'sanitize-url', '>= 0.1.3'
 	end
 	Jeweler::GemcutterTasks.new
 rescue LoadError
