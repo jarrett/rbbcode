@@ -95,5 +95,11 @@ describe RbbCode::Parser do
 			@parser.parse('[url=http://www.google.com][img]http://www.123.com/123.png[/img][/url]').should ==
 				'<p><a href="http://www.google.com"><img src="http://www.123.com/123.png" alt=""/></a></p>'
 		end
+		
+		it 'can parse phpBB-style [*] tags' do
+			# Thanks to motiv for finding this
+			@parser.parse("[list]\n[*]one\n[*]two\n[/list]"
+			).should == '<ul><li>one</li><li>two</li></ul>'
+		end
 	end
 end

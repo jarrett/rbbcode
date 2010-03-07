@@ -35,6 +35,16 @@ module RbbCode
 	end
 	
 	class SchemaTag < SchemaNode
+		def closes_twins
+			@schema.close_twins(@name)
+			self
+		end
+		
+		def does_not_close_twins
+			@schema.dont_close_twins(@name)
+			self
+		end
+		
 		def initialize(schema, name)
 			@schema = schema
 			@name = name
@@ -143,6 +153,19 @@ module RbbCode
 			@forbidden_descent = {}
 			@required_parents = {}
 			@no_text = []
+			@twin_closers = []
+		end
+		
+		def close_twins(tag_name)
+			@twin_closers << tag_name.to_s unless @twin_closers.include?(tag_name.to_s)
+		end
+		
+		def close_twins?(tag_name)
+			@twin_closers.include?(tag_name.to_s)
+		end
+		
+		def does_not_close_twins(tag_name)
+			@twin_closers.delete(tag_name.to_s)
 		end
 		
 		def forbid_children_except(parent, children)
@@ -175,6 +198,7 @@ module RbbCode
 			@child_requirements = {}
 			@never_empty = []
 			@no_text = []
+			@twin_closers = []
 			use_defaults
 		end
 		
@@ -248,6 +272,7 @@ module RbbCode
 			tag('code').may_not_be_nested
 			tag('p').may_not_be_nested
 			tag('*').must_be_child_of('list')
+			tag('*').closes_twins
 			tag('list').may_not_descend_from('p')
 			tag('list').may_only_be_parent_of('*')
 			tag('list').may_not_contain_text

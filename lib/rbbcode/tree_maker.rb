@@ -100,7 +100,7 @@ module RbbCode
 		end
 		
 		def make_tree(str)
-			delete_empty_paragraphs!(
+			delete_junk_breaks!(
 				delete_invalid_empty_tags!(
 					parse_str(str)
 				)
@@ -130,14 +130,18 @@ module RbbCode
 			end
 		end
 		
-		def delete_empty_paragraphs!(node)
+		# Delete empty paragraphs and line breaks at the end of block-level elements
+		def delete_junk_breaks!(node)
 			node.children.reject! do |child|
 				if child.is_a?(TagNode)
 					if !child.children.empty?
-						delete_empty_paragraphs!(child)
+						delete_junk_breaks!(child)
 						false
 					elsif child.tag_name == @schema.paragraph_tag_name
-						# It's an empty paragraph tag, so the reject! block should return true
+						# It's an empty paragraph tag
+						true
+					elsif @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
+						# It's a line break a the end of the block-level element
 						true
 					else
 						false
@@ -217,7 +221,7 @@ module RbbCode
 						current_token << char
 					end
 				when :break
-					if char == CR_CODE or char_code == LF_CODE
+					if char_code == CR_CODE or char_code == LF_CODE
 						current_token << char
 					else
 						if break_type(current_token) == :paragraph
@@ -289,6 +293,11 @@ module RbbCode
 							current_parent << tag_node
 							current_parent = tag_node
 							# If all of this results in empty paragraph tags, no worries: they will be deleted later.
+						elsif tag_node.tag_name == current_parent.tag_name and @schema.close_twins?(tag_node.tag_name)
+							# The current tag and the tag we're now opening are of the same type, and this kind of tag auto-closes its twins
+							# (E.g. * tags in the default config.)
+							current_parent.parent << tag_node
+							current_parent = tag_node
 						elsif @schema.tag(tag_node.tag_name).valid_in_context?(*ancestor_list(current_parent))
 							current_parent << tag_node
 							current_parent = tag_node
