@@ -50,6 +50,16 @@ module RbbCode
 			@name = name
 		end
 		
+		def is_not_preformatted
+			@schema.unmark_as_preformatted(@name)
+			self
+		end
+		
+		def is_preformatted
+			@schema.mark_as_preformatted(@name)
+			self
+		end
+		
 		def may_be_nested
 			@schema.allow_descent(@name, @name)
 			self
@@ -154,6 +164,7 @@ module RbbCode
 			@required_parents = {}
 			@no_text = []
 			@twin_closers = []
+			@preformatted = []
 		end
 		
 		def close_twins(tag_name)
@@ -199,6 +210,7 @@ module RbbCode
 			@never_empty = []
 			@no_text = []
 			@twin_closers = []
+			@preformatted = []
 			use_defaults
 		end
 		
@@ -206,8 +218,16 @@ module RbbCode
 			'br'
 		end
 		
+		def mark_as_preformatted(tag_name)
+			@preformatted << tag_name.to_s unless @preformatted.include?(tag_name.to_s)
+		end
+		
 		def paragraph_tag_name
 			'p'
+		end
+		
+		def preformatted?(tag_name)
+			@preformatted.include?(tag_name.to_s)
 		end
 		
 		def require_parents(parents, child) #:nodoc:
@@ -254,6 +274,10 @@ module RbbCode
 			return true
 		end
 
+		def unmark_as_preformatted(tag_name)
+			@preformatted.delete(tag_name.to_s)
+		end
+
 		def unrequire_parent(parent, child)
 			@required_parents.delete(child.to_s)
 		end
@@ -270,6 +294,7 @@ module RbbCode
 			tag('url').may_not_be_nested
 			tag('img').may_not_be_nested
 			tag('code').may_not_be_nested
+			tag('code').is_preformatted
 			tag('p').may_not_be_nested
 			tag('*').must_be_child_of('list')
 			tag('*').closes_twins

@@ -70,12 +70,21 @@ module RbbCode
 			super(parent)
 			@tag_name = tag_name
 			@value = value
+			@preformatted = false
 		end
 		
 		def inner_bb_code
 			@children.inject('') do |output, child|
 				output << child.to_bb_code
 			end
+		end
+		
+		def preformat!
+			@preformatted = true
+		end
+		
+		def preformatted?
+			@preformatted
 		end
 		
 		def to_bb_code
@@ -262,7 +271,7 @@ module RbbCode
 					case char
 					when '['
 						current_parent << TextNode.new(current_parent, '[')
-						# No need to reset current_token or current_token_type
+						# No need to reset current_token or current_token_type, because now we're in a new possible tag
 					when '/'
 						current_token_type = :closing_tag
 						current_token << '/'
@@ -302,7 +311,12 @@ module RbbCode
 							current_parent << tag_node
 							current_parent = tag_node
 						end # else, don't do anything--the tag is invalid and will be ignored
-						current_token_type = :unknown
+						if @schema.preformatted?(current_parent.tag_name)
+							current_token_type = :preformatted
+							current_parent.preformat!
+						else
+							current_token_type = :unknown
+						end
 						current_token = ''
 					elsif char == "\r" or char == "\n"
 						current_parent << TextNode.new(current_parent, current_token)
@@ -339,6 +353,27 @@ module RbbCode
 						current_token_type = :text
 						current_token << char
 					end					
+				when :preformatted
+					if char == '['
+						current_parent << TextNode.new(current_parent, current_token)
+						current_token_type = :possible_preformatted_end
+						current_token = '['
+					else
+						current_token << char
+					end
+				when :possible_preformatted_end
+					current_token << char
+					if current_token == "[/#{current_parent.tag_name}]" # Did we just see the closing tag for this preformatted element?
+						current_parent = current_parent.parent
+						current_token_type = :unknown
+						current_token = ''
+					elsif char == ']' # We're at the end of this opening/closing tag, and it's not the closing tag for the preformatted element
+						current_parent << TextNode.new(current_parent, current_token)
+						current_token_type = :preformatted
+						current_token = ''
+					end
+				else
+					raise "Unknown token type in state machine: #{current_token_type}"
 				end
 			end
 			# Handle whatever's left in the current token

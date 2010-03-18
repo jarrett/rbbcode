@@ -78,8 +78,9 @@ class NodeBuilder
 		self << TextNode.new(@current_parent, contents)
 	end
 	
-	def tag(tag_name, value = nil, &block)
+	def tag(tag_name, value = nil, preformatted = false, &block)
 		tag_node = TagNode.new(@current_parent, tag_name, value)
+		tag_node.preformat! if preformatted
 		self << tag_node
 		original_parent = @current_parent
 		@current_parent = tag_node

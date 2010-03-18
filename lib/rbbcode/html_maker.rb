@@ -19,12 +19,12 @@ module RbbCode
 		
 		def make_html(node)
 			output = ''
-			case node.class.to_s
-			when 'RbbCode::RootNode'
+			case node
+			when RbbCode::RootNode
 				node.children.each do |child|
 					output << make_html(child)
 				end
-			when 'RbbCode::TagNode'
+			when RbbCode::TagNode
 				custom_tag_method = "html_from_#{node.tag_name}_tag"
 				if respond_to?(custom_tag_method)
 					output << send(custom_tag_method, node)
@@ -33,9 +33,14 @@ module RbbCode
 					node.children.each do |child|
 						inner_html << make_html(child)
 					end
-					output << content_tag(map_tag_name(node.tag_name), inner_html)
+					to_append = content_tag(map_tag_name(node.tag_name), inner_html)
+					if node.preformatted?
+						to_append = content_tag('pre', to_append)
+					end
+					output << to_append
+					#puts output
 				end
-			when 'RbbCode::TextNode'
+			when RbbCode::TextNode
 				output << node.text
 			else
 				raise "Don't know how to make HTML from #{node.class}"

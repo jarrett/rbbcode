@@ -76,5 +76,15 @@ describe RbbCode::HtmlMaker do
 				end
 			end
 		end
-	end
+		
+		it 'wraps preformatted tags in <pre>' do
+			expect_html('<p><pre><code>Some code</code></pre></p>') do
+				tag('p') do
+					tag('code', nil, true) do
+						text 'Some code'
+					end
+				end
+			end
+		end
+	end	
 end

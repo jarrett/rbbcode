@@ -39,10 +39,6 @@ describe RbbCode::Parser do
 			@parser.parse('[img]http://example.com/image.jpg[/img]').should == '<p><img src="http://example.com/image.jpg" alt=""/></p>'
 		end
 		
-		it 'should turn [code] to <code>' do
-			@parser.parse('Too bad [code]method_missing[/code] is rarely useful').should == '<p>Too bad <code>method_missing</code> is rarely useful</p>'
-		end
-		
 		it 'should parse nested tags' do
 			@parser.parse('[b][i]This is bold-italic[/i][/b]').should == '<p><strong><em>This is bold-italic</em></strong></p>'
 		end
@@ -100,6 +96,22 @@ describe RbbCode::Parser do
 			# Thanks to motiv for finding this
 			@parser.parse("[list]\n[*]one\n[*]two\n[/list]"
 			).should == '<ul><li>one</li><li>two</li></ul>'
+		end
+		
+		context 'parsing [code] tags' do
+			# Thanks to fatalerrorx for finding these
+			it 'wraps the <code> tags in <pre> tags' do
+				@parser.parse('The [code]some code[/code] should be preformatted').should == '<p>The <pre><code>some code</code></pre> should be preformatted</p>'
+			end
+			
+			it 'leaves line breaks inside untouched' do
+				@parser.parse("Two lines of code:\n\n[code]line 1\n\nline 2[/code]\n\nAnd some more text.").should ==
+					"<p>Two lines of code:</p><p><pre><code>line 1\n\nline 2</code></pre></p><p>And some more text.</p>"
+			end
+			
+			it 'treats tags other than the closing tag as literals' do
+				@parser.parse('[code]This is [b]bold[/b] text[/code]').should == '<p><pre><code>This is [b]bold[/b] text</code></pre></p>'
+			end
 		end
 	end
 end
