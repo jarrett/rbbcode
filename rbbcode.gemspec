@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rbbcode}
-  s.version = "0.1.6"
+  s.version = "0.1.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jarrett Colby"]
-  s.date = %q{2010-03-07}
+  s.date = %q{2010-03-17}
   s.description = %q{RbbCode is a customizable Ruby library for parsing BB Code. RbbCode validates and cleans input. It supports customizable schemas so you can set rules about what tags are allowed where. The default rules are designed to ensure valid HTML output.}
   s.email = %q{jarrett@jarrettcolby.com}
   s.extra_rdoc_files = [
