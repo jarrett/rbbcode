@@ -85,7 +85,7 @@ module RbbCode
 		end
 		
 		def may_only_be_parent_of(*tag_names)
-			@schema.forbid_children_except(@name, *tag_names)
+			@schema.forbid_children_except(@name, tag_names)
 			self
 		end
 		
