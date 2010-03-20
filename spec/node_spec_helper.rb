@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module RbbCode
 	class RootNode
 		def == (other_node)
