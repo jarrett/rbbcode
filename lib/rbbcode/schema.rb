@@ -1,3 +1,4 @@
+# encoding: utf-8
 module RbbCode
 	DEFAULT_ALLOWED_TAGS = [
 		'p',

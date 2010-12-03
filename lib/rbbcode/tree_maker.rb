@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'pp'
 
 module RbbCode
@@ -56,6 +57,11 @@ module RbbCode
 	
 	class TagNode < Node
 		def self.from_opening_bb_code(parent, bb_code)
+		  # Remove colon if leave_tag
+		  if bb_code[1] == ':'
+		    bb_code = "[#{bb_code[2..-1]}"
+		  end
+		  
 			if equal_index = bb_code.index('=')
 				tag_name = bb_code[1, equal_index - 1]
 				value = bb_code[(equal_index + 1)..-2]
@@ -275,6 +281,9 @@ module RbbCode
 					when '/'
 						current_token_type = :closing_tag
 						current_token << '/'
+				  when ':'
+				    current_token_type = :leave_tag
+				    current_token << ':'
 					else
 						if tag_name_char?(char_code)
 							current_token_type = :opening_tag
@@ -327,6 +336,21 @@ module RbbCode
 					else
 						current_token_type = :text
 						current_token << char
+					end
+				when :leave_tag
+				  if tag_name_char?(char_code) or char == '='
+						current_token << char
+					elsif char == ']'
+					  current_token << ']'
+					  tag_node = TagNode.from_opening_bb_code(current_parent, current_token)
+					  
+					  if @schema.tag(tag_node.tag_name).valid_in_context?(*ancestor_list(current_parent))
+					    current_parent.children << tag_node
+					    current_token_type = :unknown
+					    current_token = ''
+					  else
+					    current_token_type = :text
+					  end  
 					end
 				when :closing_tag
 					if tag_name_char?(char_code)

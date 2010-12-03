@@ -1,3 +1,4 @@
+# coding: utf-8
 $KCODE = 'u'
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
@@ -113,5 +114,40 @@ describe RbbCode::Parser do
 				@parser.parse('[code]This is [b]bold[/b] text[/code]').should == '<p><pre><code>This is [b]bold[/b] text</code></pre></p>'
 			end
 		end
+		
+		# Leave tag support
+		
+		it 'should parse allowed leave tags' do
+		  schema = RbbCode::Schema.new
+		  schema.allow_tag(:br)
+		  html_maker = CustomHtmlMaker.new
+		  @parser = RbbCode::Parser.new(:schema => schema, :html_maker => html_maker)
+		  
+		  @parser.parse('This text should contain a [:br] HTML tag').should == '<p>This text should contain a <br /> HTML tag</p>'
+		end
+		
+		# Bug from original version
+		it 'should not parse multiple not closing tags' do
+		  schema = RbbCode::Schema.new
+		  schema.allow_tag(:Qsmiley)
+		  html_maker = CustomHtmlMaker.new
+		  @parser = RbbCode::Parser.new(:schema => schema, :html_maker => html_maker)
+		  
+		  @parser.parse('Two smileys: 1) [Qsmiley] and 2) [Qsmiley]').should_not == '<p>Two smileys: 1) <smiley /> and 2) <smiley /></p>'
+		end
+		
+		it 'should parse multiple allowed leave tags' do
+		  schema = RbbCode::Schema.new
+		  schema.allow_tag(:br)
+		  html_maker = CustomHtmlMaker.new
+		  @parser = RbbCode::Parser.new(:schema => schema, :html_maker => html_maker)
+		  
+		  @parser.parse('This text should contain a [:br] HTML tag and another one [:br]').should == '<p>This text should contain a <br /> HTML tag and another one <br /></p>'
+		end
+		
+		it 'should parse unknown leave tags as text' do
+		  @parser.parse('This text should contain a [:pseudo] BBCode tag').should == '<p>This text should contain a [:pseudo] BBCode tag</p>'
+		end
+		
 	end
 end
