@@ -72,11 +72,7 @@ RbbCode does not support all the tags listed on Wikpedia out of the box, and pro
 
 In order to support inline BBCode tags like smileys I added the following syntax:
 
-<pre>
-  <code>
-    [:tagname]
-  </code>
-</pre>
+  `[:tagname]`
   
 These tags do not need to be closed. For HTML generation the method html_from_tagname_tag(node) is called, as usual.
 
