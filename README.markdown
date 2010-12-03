@@ -71,7 +71,6 @@ As you can infer from the second example, RbbCode does not support attributes li
 RbbCode does not support all the tags listed on Wikpedia out of the box, and probably never will. However, you can easily add support for as many tags as you want.
 
 In order to support inline BBCode tags like smileys I added the following syntax:
-
     [:tagname]
   
 These tags do not need to be closed. For HTML generation the method html_from_tagname_tag(node) is called, as usual.
