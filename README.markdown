@@ -70,6 +70,10 @@ As you can infer from the second example, RbbCode does not support attributes li
 
 RbbCode does not support all the tags listed on Wikpedia out of the box, and probably never will. However, you can easily add support for as many tags as you want.
 
+
+BBCode Syntax Extensions
+========================
+
 In order to support inline BBCode tags like smileys I added the following syntax:
     [:tagname]
   
