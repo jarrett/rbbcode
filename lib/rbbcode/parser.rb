@@ -1,4 +1,3 @@
-# encoding: utf-8
 module RbbCode
 	class Parser
 		def initialize(config = {})
