@@ -57,7 +57,7 @@ module RbbCode
 	class TagNode < Node
 		def self.from_opening_bb_code(parent, bb_code)
 		  # Remove colon if leave_tag
-		  if bb_code[1] == ':'
+		  if bb_code[1,1] == ':'
 		    bb_code = "[#{bb_code[2..-1]}"
 		  end
 		  
@@ -281,7 +281,7 @@ module RbbCode
 						current_token_type = :closing_tag
 						current_token << '/'
 				  when ':'
-				    current_token_type = :leave_tag
+				    current_token_type = :leaf_tag
 				    current_token << ':'
 					else
 						if tag_name_char?(char_code)
@@ -336,7 +336,7 @@ module RbbCode
 						current_token_type = :text
 						current_token << char
 					end
-				when :leave_tag
+				when :leaf_tag
 				  if tag_name_char?(char_code) or char == '='
 						current_token << char
 					elsif char == ']'
