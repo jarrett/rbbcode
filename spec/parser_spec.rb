@@ -151,12 +151,12 @@ describe RbbCode::Parser do
     
     # Bugs
     
-    it 'should not parse empty quote' do
-      @parser.parse("[quote][/quote]").should == ""
+    it 'should omit empty quotes' do
+      @parser.parse("[quote][/quote]").should == "<blockquote></blockquote>"
     end
     
-    it 'should parse quotes' do
-      @parser.parse("[quote]Hallo[/quote]").should == "<blockquote>Hallo</blockquote>"
+    it 'should parse empty codes' do
+      @parser.parse("[code][/code]").should == "<p><pre><code></code></pre></p>"
     end
 		
 	end
