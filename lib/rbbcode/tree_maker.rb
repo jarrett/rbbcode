@@ -154,7 +154,8 @@ module RbbCode
 					elsif child.tag_name == @schema.paragraph_tag_name
 						# It's an empty paragraph tag
 						true
-					elsif not node.is_a?(RootNode) and @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
+					#elsif not node.is_a?(RootNode) and @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
+					elsif @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
 						# It's a line break a the end of the block-level element
 						true
 					else
