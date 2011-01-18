@@ -295,6 +295,7 @@ module RbbCode
 			tag('img').may_not_be_nested
 			tag('code').may_not_be_nested
 			tag('code').is_preformatted
+			tag('quote').may_not_be_empty
 			tag('p').may_not_be_nested
 			tag('*').must_be_child_of('list')
 			tag('*').closes_twins
