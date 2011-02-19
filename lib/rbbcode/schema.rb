@@ -268,6 +268,7 @@ module RbbCode
 		end
 		
 		def text_valid_in_context?(*ancestors)
+		  ancestors.flatten!
 			if @no_text.include?(ancestors[0].to_s)
 				return false
 			end
