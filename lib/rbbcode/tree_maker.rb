@@ -56,6 +56,11 @@ module RbbCode
 	
 	class TagNode < Node
 		def self.from_opening_bb_code(parent, bb_code)
+		  # Remove colon if leave_tag
+		  if bb_code[1,1] == ':'
+		    bb_code = "[#{bb_code[2..-1]}"
+		  end
+		  
 			if equal_index = bb_code.index('=')
 				tag_name = bb_code[1, equal_index - 1]
 				value = bb_code[(equal_index + 1)..-2]
@@ -149,6 +154,7 @@ module RbbCode
 					elsif child.tag_name == @schema.paragraph_tag_name
 						# It's an empty paragraph tag
 						true
+					#elsif not node.is_a?(RootNode) and @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
 					elsif @schema.block_level?(node.tag_name) and child.tag_name == @schema.line_break_tag_name and node.children.last == child
 						# It's a line break a the end of the block-level element
 						true
@@ -192,8 +198,21 @@ module RbbCode
 			# be temporarily split up as we append bytes onto the text nodes. But as of yet, I haven't found
 			# a way that this could cause a problem. The bytes always come back together again. (It would be a problem
 			# if we tried to count the characters for some reason, but we don't do that.)
-			str.each_byte do |char_code|
-				char = char_code.chr
+
+      # AQ: #each_byte doesn't work with ruby 1.9+, but luckily we have #each_char
+      split_method = :each_byte
+      split_method = :each_char if RUBY_VERSION.split('.')[1] > "8"
+      
+			block = Proc.new do |char|
+			  if split_method == :each_char
+			    # ruby 1.9
+			    char_code = char.ord
+		    else
+		      # ruby 1.8
+		      char_code = char
+		      char = char_code.chr
+	      end
+
 				case current_token_type
 				when :unknown
 					case char
@@ -275,6 +294,9 @@ module RbbCode
 					when '/'
 						current_token_type = :closing_tag
 						current_token << '/'
+				  when ':'
+				    current_token_type = :leaf_tag
+				    current_token << ':'
 					else
 						if tag_name_char?(char_code)
 							current_token_type = :opening_tag
@@ -328,6 +350,21 @@ module RbbCode
 						current_token_type = :text
 						current_token << char
 					end
+				when :leaf_tag
+				  if tag_name_char?(char_code) or char == '='
+						current_token << char
+					elsif char == ']'
+					  current_token << ']'
+					  tag_node = TagNode.from_opening_bb_code(current_parent, current_token)
+					  
+					  if @schema.tag(tag_node.tag_name).valid_in_context?(*ancestor_list(current_parent))
+					    current_parent.children << tag_node
+					    current_token_type = :unknown
+					    current_token = ''
+					  else
+					    current_token_type = :text
+					  end  
+					end
 				when :closing_tag
 					if tag_name_char?(char_code)
 						current_token << char
@@ -376,6 +413,9 @@ module RbbCode
 					raise "Unknown token type in state machine: #{current_token_type}"
 				end
 			end
+
+      str.send(split_method, &block)
+      
 			# Handle whatever's left in the current token
 			if current_token_type != :break and !current_token.empty?
 				current_parent << TextNode.new(current_parent, current_token)

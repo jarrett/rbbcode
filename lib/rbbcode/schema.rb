@@ -268,6 +268,7 @@ module RbbCode
 		end
 		
 		def text_valid_in_context?(*ancestors)
+		  ancestors.flatten!
 			if @no_text.include?(ancestors[0].to_s)
 				return false
 			end
@@ -295,6 +296,8 @@ module RbbCode
 			tag('img').may_not_be_nested
 			tag('code').may_not_be_nested
 			tag('code').is_preformatted
+			#tag('code').may_not_be_empty
+			tag('quote').may_not_be_empty
 			tag('p').may_not_be_nested
 			tag('*').must_be_child_of('list')
 			tag('*').closes_twins

@@ -1,12 +1,7 @@
-The gem is fixed!
-=================
-
-Due to a defective gemspec, at least one version (0.1.3) wasn't packaging the lib directory in the .gem file. This has been corrected in 0.1.4. Sorry for the delay in fixing this.
-
 About RbbCode
 =============
 
-RbbCode is a customizable Ruby library for parsing BB Code.
+RbbCode is a customizable Ruby library for parsing BB Code originally developed by Jarret (https://github.com/jarrett/rbbcode).
 
 RbbCode validates and cleans input. It supports customizable schemas so you can set rules about what tags are allowed where. The default rules are designed to ensure valid HTML output.
 
@@ -74,6 +69,15 @@ Tags must be in one of the following forms:
 As you can infer from the second example, RbbCode does not support attributes like in HTML and XML. Rather, a tag can have a single "value," which is similar to an anonymous attribute. This is how [url] and [img] tags work, for example.
 
 RbbCode does not support all the tags listed on Wikpedia out of the box, and probably never will. However, you can easily add support for as many tags as you want.
+
+
+BBCode Syntax Extensions
+========================
+
+In order to support inline BBCode tags like smileys I added the following syntax:
+    [:tagname]
+  
+These tags do not need to be closed. For HTML generation the method html_from_tagname_tag(node) is called, as usual.
 
 XSS Prevention
 ==============

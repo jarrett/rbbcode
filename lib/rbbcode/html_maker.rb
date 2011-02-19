@@ -55,7 +55,7 @@ module RbbCode
 			attributes.each do |attr, value|
 				output << " #{attr}=\"#{value}\""
 			end
-			if contents.nil? or contents.empty?
+			if contents.nil? or contents.empty? and not tag_name == 'code'
 				output << '/>'
 			else
 				output << ">#{contents}</#{tag_name}>"

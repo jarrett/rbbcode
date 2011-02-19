@@ -1,0 +1,15 @@
+.rvmrc
+coverage
+rdoc
+doc
+.yardoc
+.bundle
+Gemfile.lock
+pkg
+.DS_Store
+*.tmproj
+tmtags
+*~
+\#*
+.\#*
+*.swp
