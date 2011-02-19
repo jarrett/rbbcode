@@ -12,8 +12,8 @@ require 'rake'
 require 'jeweler'
 
 Jeweler::Tasks.new do |gem|
-	gem.name = 'aq1018-rbbcode'
-	gem.homepage = "http://github.com/aq1018/rbbcode"
+	gem.name = 'rbbcode'
+	gem.homepage = "http://github.com/jarrett/rbbcode"
 	gem.license = "MIT"
 	gem.summary = 'Ruby BB Code parser'
 	gem.description = 'RbbCode is a customizable Ruby library for parsing BB Code. RbbCode validates and cleans input. It supports customizable schemas so you can set rules about what tags are allowed where. The default rules are designed to ensure valid HTML output.'
