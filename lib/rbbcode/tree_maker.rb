@@ -198,8 +198,21 @@ module RbbCode
 			# be temporarily split up as we append bytes onto the text nodes. But as of yet, I haven't found
 			# a way that this could cause a problem. The bytes always come back together again. (It would be a problem
 			# if we tried to count the characters for some reason, but we don't do that.)
-			str.each_byte do |char_code|
-				char = char_code.chr
+
+      # AQ: #each_byte doesn't work with ruby 1.9+, but luckily we have #each_char
+      split_method = :each_byte
+      split_method = :each_char if RUBY_VERSION.split('.')[1] > "8"
+      
+			block = Proc.new do |char|
+			  if split_method == :each_char
+			    # ruby 1.9
+			    char_code = char.ord
+		    else
+		      # ruby 1.8
+		      char_code = char
+		      char = char_code.chr
+	      end
+
 				case current_token_type
 				when :unknown
 					case char
@@ -400,6 +413,9 @@ module RbbCode
 					raise "Unknown token type in state machine: #{current_token_type}"
 				end
 			end
+
+      str.send(split_method, &block)
+      
 			# Handle whatever's left in the current token
 			if current_token_type != :break and !current_token.empty?
 				current_parent << TextNode.new(current_parent, current_token)
