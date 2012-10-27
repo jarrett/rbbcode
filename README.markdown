@@ -20,6 +20,10 @@ malicious HTML.
 For the curious, the parser is built with Treetop. But you don't need to know anything about Treetop
 to use RbbCode.
 
+## Installation
+
+    gem install rbbcode
+
 ## Options
 
 The constructor can accept an options hash.
