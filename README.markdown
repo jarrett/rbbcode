@@ -26,7 +26,7 @@ To add emoticon support:
 
     RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
     
-You can supply a [Sanitize config hash](https://github.com/rgrove/sanitize), which will
+You can supply a [Sanitize config hash](https://github.com/rgrove/sanitize#configuration), which will
 be passed through verbatim to the Sanitize gem. The default Sanitize config is in
 `rbbcode/sanitize.rb`. Usage:
 
