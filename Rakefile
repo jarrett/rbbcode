@@ -10,13 +10,13 @@ end
 
 task :build do
   `rm *.gem`
-  `gem build rbbcode.gemspec`
+  puts `gem build rbbcode.gemspec`
 end
 
 task :install do
-  `gem install #{built_gem_name}`
+  puts `gem install #{built_gem_name}`
 end
 
 task :release do
-  `gem push #{built_gem_name}`
+  puts `gem push #{built_gem_name}`
 end
