@@ -1,10 +1,12 @@
-# Important notice for users of 0.1.11 or lower
+# RbbCode
+
+## Important notice for users of 0.1.11 or lower
 
 RbbCode has been updated! The new release (1.x.x) is not compatible with the old one (0.1.11). If
 you want to upgrade to 1.x.x, you'll need to adjust any calls to RbbCode in your code to match the
 new API, as described below.
 
-# About RbbCode
+## About RbbCode
 
 RbbCode converts BBCode to HTML. Basic usage:
 
@@ -13,7 +15,7 @@ RbbCode converts BBCode to HTML. Basic usage:
 For the curious, the parser is built with Treetop. But you don't need to know anything about Treetop
 to use RbbCode.
 
-# Options
+## Options
 
 The constructor can accept an options hash.
 
@@ -21,7 +23,7 @@ To add emoticon support:
 
   RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
 
-# Supported BBCode features
+## Supported BBCode features
 
 RbbCode supports the following BBCode features:
 
