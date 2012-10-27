@@ -10,7 +10,7 @@ new API, as described below.
 
 RbbCode converts BBCode to HTML. Basic usage:
 
-  RbbCode.new.convert('This is [b]BBCode[/b]')
+    RbbCode.new.convert('This is [b]BBCode[/b]')
 
 For the curious, the parser is built with Treetop. But you don't need to know anything about Treetop
 to use RbbCode.
@@ -21,7 +21,7 @@ The constructor can accept an options hash.
 
 To add emoticon support:
 
-  RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
+    RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
 
 ## Supported BBCode features
 
