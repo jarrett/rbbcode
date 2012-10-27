@@ -4,7 +4,9 @@
 require 'erb'
 require 'rubygems'
 require 'treetop'
+require 'sanitize'
 require 'rbbcode/node_extensions'
+require 'rbbcode/sanitize'
 
 class RbbCode  
   def self.parser_class
@@ -25,7 +27,10 @@ class RbbCode
   end
   
   def initialize(options = {})
-    @options = options
+    @options = {
+      :sanitize => true,
+      :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG
+    }.merge(options)
   end
   
   def convert(bb_code)
@@ -36,5 +41,10 @@ class RbbCode
       end
     end
     html
+    if @options[:sanitize]
+      Sanitize.clean(html, @options[:sanitize_config])
+    else
+      html
+    end
   end
 end

@@ -12,6 +12,9 @@ RbbCode converts BBCode to HTML. Basic usage:
 
     RbbCode.new.convert('This is [b]BBCode[/b]')
 
+All HTML output will be passed through the [Sanitize](https://github.com/rgrove/sanitizeize) gem. This
+protects you against malicious HTML.
+
 For the curious, the parser is built with Treetop. But you don't need to know anything about Treetop
 to use RbbCode.
 
@@ -22,6 +25,16 @@ The constructor can accept an options hash.
 To add emoticon support:
 
     RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
+    
+You can supply a [Sanitize config hash](https://github.com/rgrove/sanitize), which will
+be passed through verbatim to the Sanitize gem. The default Sanitize config is in
+`rbbcode/sanitize.rb`. Usage:
+
+    RbbCode.new(:sanitize_config => my_sanitize_config_hash)
+    
+You can also turn Sanitize off altogether, though this is not recommended:
+
+    RbbCode.new(:sanitize => false)
 
 ## Supported BBCode features
 
