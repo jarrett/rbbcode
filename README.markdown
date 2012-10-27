@@ -12,8 +12,10 @@ RbbCode converts BBCode to HTML. Basic usage:
 
     RbbCode.new.convert('This is [b]BBCode[/b]')
 
-All HTML output will be passed through the [Sanitize](https://github.com/rgrove/sanitizeize) gem. This
-protects you against malicious HTML.
+RbbCode recovers gracefully from invalid markup. Any bad BBCode tags will remain in the output as-is,
+i.e. they will not be converted to HTML tags and will be visible to end users. All HTML output is
+passed through the [Sanitize](https://github.com/rgrove/sanitizeize) gem. This protects you against
+malicious HTML.
 
 For the curious, the parser is built with Treetop. But you don't need to know anything about Treetop
 to use RbbCode.
