@@ -14,6 +14,10 @@ class TestDocParsing < Test::Unit::TestCase
         <p>Here\'s another: <a href="http://example.com">Example</a></p>
         <p>This is an image: <img src="http://example.com/foo.png" alt="Image"/></p>
         
+        <p><span style="color:red;">This is red text</span></p>
+        
+        <p><span style="color:red;"><em>This is red italic text</em></span></p>
+        
         <blockquote>        
           <p>This <em>is</em> a quotation.</p>
                           
@@ -41,6 +45,10 @@ class TestDocParsing < Test::Unit::TestCase
         Here\'s another: [url=http://example.com]Example[/url]
         
         This is an image: [img]http://example.com/foo.png[/img]
+        
+        [color=red]This is red text[/color]
+        
+        [color=red][i]This is red italic text[/i][/color]
         
         [quote]
         This [i]is[/i] a quotation.
