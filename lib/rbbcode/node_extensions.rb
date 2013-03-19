@@ -78,10 +78,16 @@ class RbbCode
     end
   end
   
+  module ColorTagNode
+    def color_to_html
+      '<span style="color:' + ident.text_value + ';">' + recursively_convert(text)  + '</span>'
+    end
+  end
+  
   module TagNode
     include RecursiveConversion
     
-    TAG_MAPPINGS = {'b' => 'strong', 'i' => 'em', 'u' => 'u', 'url' => URLTagNode, 'img' => ImgTagNode}
+    TAG_MAPPINGS = { 'b' => 'strong', 'i' => 'em', 'u' => 'u', 'url' => URLTagNode, 'img' => ImgTagNode, 'color' => ColorTagNode }
     
     def contents
       # The first element is the opening tag, the second is everything inside,
