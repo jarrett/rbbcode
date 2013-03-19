@@ -19,7 +19,7 @@ class RbbCode
     return if env[:is_whitelisted] || !node.element?
     return unless node_name == 'span'
     
-    return unless node['style'] =~ /^color: *((#[a-f0-9]{3,6})|([a-z]+));$/
+    return unless node['style'] =~ /^color:((#[a-f0-9]{3,6})|([a-z]+));$/
     
     Sanitize.clean_node!(node, {
     :elements => %w[span],
