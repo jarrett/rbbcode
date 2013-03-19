@@ -29,7 +29,8 @@ class RbbCode
   def initialize(options = {})
     @options = {
       :sanitize => true,
-      :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG
+      :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG,
+      :transformers => COLOR_PROCESSOR
     }.merge(options)
   end
   
