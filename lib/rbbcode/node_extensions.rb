@@ -80,7 +80,7 @@ class RbbCode
   
   module ColorTagNode
     def color_to_html
-      '<span style="color:' + ident.text_value + ';">' + recursively_convert(text)  + '</span>'
+      '<span style="color:' + ident.text_value.downcase + ';">' + recursively_convert(text)  + '</span>'
     end
   end
   

@@ -12,6 +12,15 @@ class TestColorParsing < Test::Unit::TestCase
     )
   end
   
+  def test_downcase_color
+    assert_converts_to(
+      # Expected HTML:
+      '<p><span style="color:red;">This is red text</span></p>',
+      # BBCode:
+      '[color=RED]This is red text[/color]'
+    )
+  end
+  
   def test_parse_tag_content
     assert_converts_to(
       # Expected HTML:
