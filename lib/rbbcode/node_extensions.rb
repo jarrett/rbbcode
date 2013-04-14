@@ -123,4 +123,10 @@ class RbbCode
       '<br/>'
     end
   end
+  
+  module LiteralTextNode
+    def to_html
+      text_value
+    end
+  end
 end

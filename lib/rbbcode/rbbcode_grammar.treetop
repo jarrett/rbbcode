@@ -15,7 +15,7 @@ grammar RbbCodeGrammar
   rule document
     # Consume the trailing linebreaks, because the paragraph lookahead
     # doesn't consume them.
-    contents:(blockquote <RbbCode::BlockquoteNode> / list <RbbCode::ListNode> / paragraph <RbbCode::ParagraphNode>)* break_ws* <RbbCode::DocumentNode>
+    contents:(blockquote <RbbCode::BlockquoteNode> / list <RbbCode::ListNode> / paragraph <RbbCode::ParagraphNode> / . <RbbCode::LiteralTextNode>)* break_ws* <RbbCode::DocumentNode>
   end
   
   rule paragraph
