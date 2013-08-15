@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name         = 'rbbcode'
-  s.version      = '1.0.3'
+  s.version      = '1.0.4'
   s.date         = '2012-10-27'
   s.summary      = 'RbbCode'
   s.description  = 'Converts BBCode to HTML. Gracefully handles invalid input.'
