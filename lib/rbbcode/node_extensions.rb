@@ -1,4 +1,11 @@
 class RbbCode
+  module Attributes
+    # Strips any number of double quotes from the beginning and end of the string
+    def strip_quotes(str)
+      str.sub(/^"+/, '').sub(/"+$/, '')
+    end
+  end
+  
   module RecursiveConversion
     def recursively_convert(node, depth = 0)
       if node.terminal?
@@ -61,10 +68,12 @@ class RbbCode
   end
   
   module URLTagNode
+    include Attributes
+    
     def url_to_html
       if respond_to?(:url) and respond_to?(:text)
         # A URL tag formatted like [url=http://example.com]Example[/url]
-        '<a href="' + url.text_value + '">' + text.text_value + '</a>'
+        '<a href="' + strip_quotes(url.text_value) + '">' + text.text_value + '</a>'
       else
         # A URL tag formatted like [url]http://example.com[/url]
         '<a href="' + inner_bbcode + '">' + inner_bbcode + '</a>'

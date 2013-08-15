@@ -2,7 +2,7 @@ class RbbCode
   DEFAULT_SANITIZE_CONFIG = {
     :elements => %w[a blockquote br code del em img li p pre strong ul u],
     :attributes => {
-      'a'   => %w[href],
+      'a'   => %w[href target],
       'img' => %w[alt src]
     },
 
