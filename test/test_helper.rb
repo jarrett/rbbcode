@@ -1,9 +1,12 @@
 $:.unshift(File.join(File.expand_path(File.dirname(__FILE__)), '../lib'))
 
-require 'minitest/unit'
-require 'turn/autorun'
+require 'minitest'
+require 'minitest/autorun'
+require 'minitest/reporters'
 require 'lorax'
 require 'rbbcode'
+
+Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
 
 class RbbCode
   module HTMLAssertions

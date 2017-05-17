@@ -1,6 +1,6 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
-class TestLinks < Test::Unit::TestCase
+class TestLinks < Minitest::Test
   include RbbCode::HTMLAssertions
   def test_complex_url_tag
     assert_converts_to(

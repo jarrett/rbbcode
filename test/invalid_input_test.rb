@@ -1,6 +1,6 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
-class TestBlockquotes < Test::Unit::TestCase
+class TestBlockquotes < Minitest::Test
   include RbbCode::HTMLAssertions
   
   # Based on bug report:

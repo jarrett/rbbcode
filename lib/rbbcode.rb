@@ -40,7 +40,6 @@ class RbbCode
         html.gsub!(emoticon, '<img src="' + url + '" alt="Emoticon"/>')
       end
     end
-    html
     if @options[:sanitize]
       Sanitize.clean(html, @options[:sanitize_config])
     else

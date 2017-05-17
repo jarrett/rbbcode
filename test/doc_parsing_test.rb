@@ -1,6 +1,6 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
-class TestDocParsing < Test::Unit::TestCase
+class TestDocParsing < Minitest::Test
   include RbbCode::HTMLAssertions
   
   def test_parsing_whole_document
