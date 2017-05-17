@@ -49,6 +49,7 @@ $RECYCLE.BIN/
 
 .*
 !.gitignore
+!.travis.yml
 *~
 
 # KDE
