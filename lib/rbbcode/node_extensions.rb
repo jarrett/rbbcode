@@ -39,7 +39,7 @@ class RbbCode
     end
 
     def to_markdown
-      paragraphs(&:to_html)
+      paragraphs(&:to_markdown)
     end
 
     def paragraphs
@@ -156,7 +156,7 @@ class RbbCode
     end
 
     def img_to_markdown
-      '![Image](' + inner_bbcode + ')'
+      "![Image](#{inner_bbcode})"
     end
   end
 
@@ -213,15 +213,16 @@ class RbbCode
     def to_markdown
       # Consult TAG_MAPPINGS to decide how to process this type of tag.
       t = tag_mappings(__method__)[tag_name]
-      if t.nil?
-        raise "No tag mapping found for #{tag_name}"
-      elsif t.is_a?(Module)
-        # This type of tag requires more than just a simple mapping from one tag name
-        # to another. So we invoke a separate Ruby module.
+
+      raise "No tag mapping found for #{tag_name}" if t.nil?
+
+      if t.is_a?(Module)
+        # This type of tag requires more than just a simple mapping from
+        # one tag name to another. So we invoke a separate Ruby module.
         extend(t)
         send("#{tag_name}_#{__method__}")
-        # Thus, if our tag_name is"url, and TAG_MAPPINGS points us to URLTagNode,
-        # that module must define url_to_markdown.
+        # Thus, if our tag_name is"url, and TAG_MAPPINGS points us to
+        # URLTagNode, that module must define url_to_markdown.
       else
         # For this type of tag, a simple mapping from one tag name to another suffices.
         "<#{t}>" + inner_html + "</#{t}>"

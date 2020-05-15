@@ -19,7 +19,8 @@ Here\'s another: [url=http://example.com]Example[/url]
 This is an image: [img]http://example.com/foo.png[/img]
 
 [quote]
-This [i]is[/i] a quotation.
+This [i]is[/i] a
+quotation.
 
 Yes it is.
 [/quote]
@@ -72,11 +73,9 @@ Here\'s another: [Example](http://example.com)
 
 This is an image: ![Image](http://example.com/foo.png)
 
-<blockquote>
-  This *is* a quotation.
-
-  Yes it is.
-</blockquote>
+>  This *is* a quotation.
+>
+>  Yes it is.
 
 * Entry 1
 * Entry 2

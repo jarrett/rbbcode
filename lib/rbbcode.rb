@@ -29,10 +29,14 @@ class RbbCode
   end
 
   def convert(bb_code)
-    markup = convert_to_markup(bb_code, @options[:to_markup])
+    markup = convert_to_markup(bb_code)
 
     @options.fetch(:emoticons, []).each do |emoticon, url|
-      markup.gsub!(emoticon, '<img src="' + url + '" alt="Emoticon"/>')
+      if to_markup == :markdown
+        markup.gsub!(emoticon, '![Emoticon](' + url + ')')
+      else
+        markup.gsub!(emoticon, '<img src="' + url + '" alt="Emoticon"/>')
+      end
     end
 
     if sanitize?
@@ -42,17 +46,21 @@ class RbbCode
     end
   end
 
+  def to_markup
+    @options[:to_markup].to_sym
+  end
+
   def parser
     @parser ||= self.class.parser_class.new
   end
 
   def sanitize?
-    @options[:to_markup].to_sym == :html && @options[:sanitize]
+    to_markup == :html && @options[:sanitize]
   end
 
   private
 
-  def convert_to_markup(bb_code, to_markup)
+  def convert_to_markup(bb_code)
     parser.parse("\n\n" + bb_code + "\n\n").send("to_#{to_markup}".to_sym)
   end
 
