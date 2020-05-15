@@ -17,7 +17,7 @@ grammar RbbCodeGrammar
     # doesn't consume them.
     contents:(blockquote <RbbCode::BlockquoteNode> / list <RbbCode::ListNode> / paragraph <RbbCode::ParagraphNode> / . <RbbCode::LiteralTextNode>)* break_ws* <RbbCode::DocumentNode>
   end
-  
+
   rule paragraph
     (break_ws 2..)
     (
@@ -25,60 +25,60 @@ grammar RbbCodeGrammar
       paragraph_contents
     )+
   end
-  
+
   rule paragraph_contents
     (tag <RbbCode::TagNode> / single_break_ws / .)
   end
-  
+
   rule break_ws
     # Allow whitespace around the linebreaks
     [ \t]* [\r\n] [ \t]*
   end
-  
+
   rule whitespace
     # Any whitespace, including linebreaks
     [ \t\r\n]
   end
-  
+
   rule single_break_ws
     # We don't count linebreaks when they're immediately followed by
     # certain keywords. This avoids printing an extra <br/> in some cases.
     break_ws !break_ws !(break_ws* ('[/quote]' / '[*]' / '[/list]')) <RbbCode::SingleBreakNode>
   end
-  
+
   rule blockquote
     break_ws*
     '[quote]'
     contents:(
       # Possible linebreaks after opening quote tag
       break_ws*
-      
+
       # First paragraph (mandatory)
       (blockquote_paragraph <RbbCode::ParagraphNode>)
-      
+
       # Subsequent paragraphs (optional)
       (
         (break_ws 2..)
         (blockquote_paragraph <RbbCode::ParagraphNode>)
       )*
-      
+
       # Possible linebreaks before closing quote tag
       break_ws*
     )
     '[/quote]'
   end
-  
+
   rule blockquote_paragraph
     (!('[/quote]' / (break_ws 2..)) paragraph_contents)+
   end
-  
+
   rule list
     break_ws*
     '[list]'
     contents:(
       # Possible linebreaks after opening list tag
       whitespace*
-      
+
       # At least one list item
       (
         (
@@ -87,24 +87,24 @@ grammar RbbCodeGrammar
           <RbbCode::ListItemNode>
         )
       )+
-      
+
       # Possible linebreaks before closing list tag
       whitespace*
     )
     '[/list]'
   end
-  
+
   rule tag
     # Make sure that anytime you call def_tag, you add it to this list:
     bold / italic / underline / simple_url / complex_url / img
   end
-  
+
   <%= def_tag 'bold', 'b' %>
   <%= def_tag 'italic', 'i' %>
   <%= def_tag 'underline', 'u' %>
   <%= def_tag 'simple_url', 'url' %>
   <%= def_tag 'img', 'img' %>
-  
+
   rule complex_url
     '[url=' url:[^\]]+ ']'
     text:(!'[/url]' .)+

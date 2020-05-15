@@ -8,9 +8,13 @@ new API, as described below.
 
 ## About RbbCode
 
-RbbCode converts BBCode to HTML. Basic usage:
+RbbCode converts BBCode to HTML or Markdown. Basic usage:
 
     RbbCode.new.convert('This is [b]BBCode[/b]')
+
+or for Markdown:
+
+    RbbCode.new(:to_markup => :markdown).convert('This is [b]BBCode[/b]')
 
 RbbCode recovers gracefully from invalid markup. Any bad BBCode tags will remain in the output as-is,
 i.e. they will not be converted to HTML tags and will be visible to end users. All HTML output is
@@ -31,16 +35,21 @@ The constructor can accept an options hash.
 To add emoticon support:
 
     RbbCode.new(:emoticons => {':)' => 'http://example.com/path/to/your/smiley.png'})
-    
+
 You can supply a [Sanitize config hash](https://github.com/rgrove/sanitize#configuration), which will
 be passed through verbatim to the Sanitize gem. The default Sanitize config is in
 `rbbcode/sanitize.rb`. Usage:
 
     RbbCode.new(:sanitize_config => my_sanitize_config_hash)
-    
+
 You can also turn Sanitize off altogether, though this is not recommended:
 
     RbbCode.new(:sanitize => false)
+
+By default RbbCode will convert to HTML. Markdown is supported as alternative
+target markup.
+
+    RbbCode.new(:to_markup => :markdown)
 
 ## Supported BBCode features
 
@@ -55,7 +64,7 @@ RbbCode supports the following BBCode features:
   * [quote]
   * [list]
   * Emoticons
-  
+
 Some BBCode parsers in the wild have more features. This varies from forum to forum. If there's a
 certain tag or other feature you'd like to see supported, please open an issue on:
 

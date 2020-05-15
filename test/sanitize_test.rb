@@ -1,8 +1,8 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
 class TestSanitize < Minitest::Test
-  include RbbCode::HTMLAssertions
-  
+  include RbbCode::StringAssertions
+
   def test_sanitize_custom_config
     # Identical to RbbCode::DEFAULT_SANITIZE_CONFIG except without <strong>
     config = {
@@ -11,7 +11,7 @@ class TestSanitize < Minitest::Test
         'a'   => %w[href],
         'img' => %w[alt src]
       },
-  
+
       :protocols => {
         'a' => {'href' => ['ftp', 'http', 'https', 'mailto', :relative]}
       }
@@ -22,7 +22,7 @@ class TestSanitize < Minitest::Test
       {:sanitize_config => config}
     )
   end
-  
+
   def test_sanitize_turned_off
     assert_converts_to(
       '<p><em>Italic</em> and a <span>custom span.</span></p>',
