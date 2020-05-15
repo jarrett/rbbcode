@@ -79,15 +79,7 @@ class RbbCode
     end
 
     def to_markdown
-      recursively_convert(contents, __method__) + "\n"
-    end
-  end
-
-  module QuoteItemNode
-    include RecursiveConversion
-
-    def to_markdown
-      "\n> " + recursively_convert(contents, __method__) + "\n"
+      "\n> " + recursively_convert(contents, __method__).sub(/\n!$/, "\n> ")# + "\n"
     end
   end
 
@@ -115,7 +107,7 @@ class RbbCode
     def to_markdown
       # Convert the :contents child node (defined in the .treetop file)
       # and wrap the result in <ul> tags.
-      "\n*" + recursively_convert(contents, __method__)
+      "* " + recursively_convert(contents, __method__).lstrip + "\n"
     end
   end
 
@@ -225,7 +217,7 @@ class RbbCode
         # URLTagNode, that module must define url_to_markdown.
       else
         # For this type of tag, a simple mapping from one tag name to another suffices.
-        "<#{t}>" + inner_html + "</#{t}>"
+        "<#{t}>" + inner_html(__method__) + "</#{t}>"
       end
     end
 
@@ -258,7 +250,7 @@ class RbbCode
     end
 
     def to_markdown
-      '  '
+      "  \n"
     end
   end
 

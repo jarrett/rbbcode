@@ -7,7 +7,7 @@ class TestDocParsing < Minitest::Test
     <<-EOS
 [b]This [i]is[/i] awesome[/b]
 
-Another paragraph.
+Another paragraph. And something [u]underlined[/u].
 
 A paragraph with
 a line break.
@@ -37,7 +37,7 @@ Smile: :) Frown: :(
     <<-EOS
 
         <p><strong>This <em>is</em> awesome</strong></p>
-        <p>Another paragraph.</p>
+        <p>Another paragraph. And something <u>underlined</u>.</p>
         <p>A paragraph with<br/>a line break.</p>
         <p>Here\'s one kind of link: <a href="http://example.org">http://example.org</a></p>
         <p>Here\'s another: <a href="http://example.com">Example</a></p>
@@ -65,7 +65,7 @@ Smile: :) Frown: :(
 
 Another paragraph.
 
-A paragraph with a line break.
+A paragraph with a line break. And something <u>underlined</u>.
 
 Here\'s one kind of link: [http://example.org](http://example.org)
 

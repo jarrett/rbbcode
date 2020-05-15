@@ -38,9 +38,9 @@ class TestBlockquotes < Minitest::Test
       0.upto(3).each do |post_breaks|
         bb_code = '[quote]' + ("\n" * pre_breaks) + 'Quoth the raven' + ("\n" * post_breaks) + '[/quote]'
         assert_converts_to(
-          '\n> Quoth the raven\n',
+          "\n> Quoth the raven\n\n",
           bb_code,
-          {},
+          { :to_markup => :markdown },
           "#{bb_code} did not convert properly"
         )
       end
@@ -52,7 +52,7 @@ class TestBlockquotes < Minitest::Test
         assert_converts_to(
           "\n> Quoth\n> \n> the\n> \n> raven\n",
           bb_code,
-          {},
+          { :to_markup => :markdown },
           "#{bb_code} did not convert properly"
         )
       end
