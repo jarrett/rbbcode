@@ -10,27 +10,27 @@ GEM
   specs:
     ansi (1.5.0)
     builder (3.2.3)
-    crass (1.0.2)
+    crass (1.0.6)
     lorax (0.2.0)
       nokogiri (>= 1.4.0)
-    mini_portile2 (2.2.0)
+    mini_portile2 (2.4.0)
     minitest (5.10.2)
     minitest-reporters (1.1.14)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
-    nokogumbo (1.4.13)
-      nokogiri
+    nokogiri (1.10.9)
+      mini_portile2 (~> 2.4.0)
+    nokogumbo (2.0.2)
+      nokogiri (~> 1.8, >= 1.8.4)
     polyglot (0.3.5)
     rake (12.0.0)
     ruby-progressbar (1.8.1)
-    sanitize (4.5.0)
+    sanitize (5.1.0)
       crass (~> 1.0.2)
-      nokogiri (>= 1.4.4)
-      nokogumbo (~> 1.4.1)
+      nokogiri (>= 1.8.0)
+      nokogumbo (~> 2.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
