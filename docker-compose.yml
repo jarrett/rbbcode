@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+  ruby:
+    build: .
+    command: tail -f /dev/null
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+volumes:
+  app:
