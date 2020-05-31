@@ -23,9 +23,6 @@ class RbbCode
       :sanitize => true,
       :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG
     }.merge(options)
-
-#    raise("#{options[:to_markup]} is not supported. Only :html and :markdown allowed")
-#      unless options[:to_markup].in?(%i[markdown html])
   end
 
   def convert(bb_code)

@@ -30,4 +30,12 @@ class TestSanitize < Minitest::Test
       {:sanitize => false}
     )
   end
+
+  def test_sanitize_turned_off_to_markdown
+    assert_converts_to(
+      '*Italic* and a <span>custom span.</span>',
+      '[i]Italic[/i] and a <span>custom span.</span>',
+      {:sanitize => false, :to_markup => :markdown}
+    )
+  end
 end

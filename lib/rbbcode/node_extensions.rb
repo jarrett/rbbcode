@@ -8,27 +8,20 @@ class RbbCode
 
   module RecursiveConversion
     def recursively_convert(node, to_markup, depth = 0)
-      if node.terminal?
-        if node.respond_to?(to_markup)
-          # This is a non-terminal node with a custom #to_html implementation.
-          node.send(to_markup)
-        else
-          # This is a terminal node without a custom #to_html implementation.
-          # If the node consists solely of whitespace, emit the empty string.
-          # Otherwise, emit the node's text value.
-          node.text_value.match(/^[\r\n\t]+$/) ? '' : node.text_value
-        end
+      if node.terminal? && !node.respond_to?(to_markup)
+        # This is a terminal node without a custom #to_markup implementation.
+        # If the node consists solely of whitespace, emit the empty string.
+        # Otherwise, emit the node's text value.
+        node.text_value.match(/^[\r\n\t]+$/) ? '' : node.text_value
+      elsif !node.terminal? && !node.respond_to?(to_markup)
+        # This is a non-terminal node without a custom #to_html implementation.
+        # Convert all its child nodes and concatenate the results.
+        node.elements.collect do |sub_node|
+          recursively_convert(sub_node, to_markup, depth + 1)
+        end.join
       else
-        if node.respond_to?(to_markup)
-          # This is a non-terminal node with a custom #to_html implementation.
-          node.send(to_markup)
-        else
-          # This is a non-terminal node without a custom #to_html implementation.
-          # Convert all its child nodes and concatenate the results.
-          node.elements.collect do |sub_node|
-            recursively_convert(sub_node, to_markup, depth + 1)
-          end.join
-        end
+        # This is a non-terminal node with a custom #to_html implementation.
+        node.send(to_markup)
       end
     end
   end
@@ -190,13 +183,16 @@ class RbbCode
     def to_html
       # Consult TAG_MAPPINGS to decide how to process this type of tag.
       t = tag_mappings(__method__)[tag_name]
-      if t.nil?
-        raise "No tag mapping found for #{tag_name}"
-      elsif t.is_a?(Module)
+
+      raise "No tag mapping found for #{tag_name}" if t.nil?
+
+      if t.is_a?(Module)
         extend(t)
+        # This type of tag requires more than just a simple mapping from
+        # one tag name to another. So we invoke a separate Ruby module.
         send("#{tag_name}_#{__method__}")
-        # Thus, if our tag_name is"url, and TAG_MAPPINGS points us to URLTagNode,
-        # that module must define url_to_html
+        # Thus, if our tag_name is"url, and TAG_MAPPINGS points us to
+        # URLTagNode, that module must define url_to_html
       else
         "<#{t}>" + inner_html(__method__) + "</#{t}>"
       end
