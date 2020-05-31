@@ -3,7 +3,7 @@ PATH
   specs:
     rbbcode (1.0.5)
       sanitize
-      treetop (= 1.4.15)
+      treetop (= 1.5.3)
 
 GEM
   remote: https://rubygems.org/
@@ -11,8 +11,8 @@ GEM
     ansi (1.5.0)
     builder (3.2.4)
     crass (1.0.6)
-    lorax (0.2.0)
-      nokogiri (>= 1.4.0)
+    lorax (0.3.0.rc2)
+      nokogiri (>= 1.4)
     mini_portile2 (2.4.0)
     minitest (5.14.1)
     minitest-reporters (1.4.2)
@@ -31,17 +31,16 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
-    treetop (1.4.15)
-      polyglot
-      polyglot (>= 0.3.1)
+    treetop (1.5.3)
+      polyglot (~> 0.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  lorax
-  minitest (~> 5)
-  minitest-reporters (~> 1)
+  lorax (>= 0.3.0.rc2)
+  minitest
+  minitest-reporters
   rake
   rbbcode!
 
