@@ -3,47 +3,46 @@ PATH
   specs:
     rbbcode (1.0.5)
       sanitize
-      treetop (= 1.4.15)
+      treetop (= 1.5.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ansi (1.5.0)
-    builder (3.2.3)
-    crass (1.0.2)
-    lorax (0.2.0)
-      nokogiri (>= 1.4.0)
-    mini_portile2 (2.2.0)
-    minitest (5.10.2)
-    minitest-reporters (1.1.14)
+    builder (3.2.4)
+    crass (1.0.6)
+    lorax (0.3.0.rc2)
+      nokogiri (>= 1.4)
+    mini_portile2 (2.4.0)
+    minitest (5.14.1)
+    minitest-reporters (1.4.2)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
-    nokogumbo (1.4.13)
-      nokogiri
+    nokogiri (1.10.9)
+      mini_portile2 (~> 2.4.0)
+    nokogumbo (2.0.2)
+      nokogiri (~> 1.8, >= 1.8.4)
     polyglot (0.3.5)
-    rake (12.0.0)
-    ruby-progressbar (1.8.1)
-    sanitize (4.5.0)
+    rake (13.0.1)
+    ruby-progressbar (1.10.1)
+    sanitize (5.1.0)
       crass (~> 1.0.2)
-      nokogiri (>= 1.4.4)
-      nokogumbo (~> 1.4.1)
-    treetop (1.4.15)
-      polyglot
-      polyglot (>= 0.3.1)
+      nokogiri (>= 1.8.0)
+      nokogumbo (~> 2.0)
+    treetop (1.5.3)
+      polyglot (~> 0.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  lorax
-  minitest (~> 5)
-  minitest-reporters (~> 1)
+  lorax (>= 0.3.0.rc2)
+  minitest
+  minitest-reporters
   rake
   rbbcode!
 
 BUNDLED WITH
-   1.15.1
+   2.1.4
