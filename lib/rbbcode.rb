@@ -10,7 +10,7 @@ require 'rbbcode/sanitize'
 
 class RbbCode  
   def self.parser_class
-    if !@grammar_loaded
+    if !instance_variable_defined?(:@grammar_loaded) or !@grammar_loaded
       Treetop.load_from_string(
         ERB.new(
           File.read(
