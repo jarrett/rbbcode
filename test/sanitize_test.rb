@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
 class TestSanitize < Minitest::Test
-  include RbbCode::HTMLAssertions
+  include RbbCode::OutputAssertions
   
   def test_sanitize_custom_config
     # Identical to RbbCode::DEFAULT_SANITIZE_CONFIG except without <strong>

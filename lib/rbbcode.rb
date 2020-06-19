@@ -8,7 +8,7 @@ require 'sanitize'
 require 'rbbcode/node_extensions'
 require 'rbbcode/sanitize'
 
-class RbbCode  
+class RbbCode
   def self.parser_class
     if !instance_variable_defined?(:@grammar_loaded) or !@grammar_loaded
       Treetop.load_from_string(
@@ -28,22 +28,35 @@ class RbbCode
   
   def initialize(options = {})
     @options = {
+      :output_format => :html,
       :sanitize => true,
       :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG
     }.merge(options)
   end
   
   def convert(bb_code)
-    html = self.class.parser_class.new.parse("\n\n" + bb_code + "\n\n").to_html
+    # Collapse CRLFs to LFs. Then replace any solitary CRs with LFs.
+    bb_code = bb_code.gsub("\r\n", "\n").gsub("\r", "\n")
+    output = self.class.parser_class.new.parse("\n\n" + bb_code + "\n\n").send("to_#{@options[:output_format]}")
     if @options[:emoticons]
-      @options[:emoticons].each do |emoticon, url|
-        html.gsub!(emoticon, '<img src="' + url + '" alt="Emoticon"/>')
-      end
+      output = convert_emoticons(output)
     end
-    if @options[:sanitize]
-      Sanitize.clean(html, @options[:sanitize_config])
+    # Sanitization works for HTML only.
+    if @options[:output_format] == :html and @options[:sanitize]
+      Sanitize.clean(output, @options[:sanitize_config])
     else
-      html
+      output
     end
+  end
+
+  def convert_emoticons(output)
+    @options[:emoticons].each do |emoticon, url|
+      output.gsub!(emoticon, '<img src="' + url + '" alt="Emoticon"/>')
+    end
+    output
+  end
+
+  def output_format
+    @options[:output_format]
   end
 end

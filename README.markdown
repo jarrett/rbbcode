@@ -38,9 +38,13 @@ be passed through verbatim to the Sanitize gem. The default Sanitize config is i
 
     RbbCode.new(:sanitize_config => my_sanitize_config_hash)
     
-You can also turn Sanitize off altogether, though this is not recommended:
+You can also turn Sanitize off altogether, but it's not recommended:
 
+    # Probably a bad idea
     RbbCode.new(:sanitize => false)
+
+Sanitization works for HTML output only. If you select a different output format, the `:sanitize`
+option will be ignored, and the output won't be sanitized.
 
 ## Supported BBCode features
 

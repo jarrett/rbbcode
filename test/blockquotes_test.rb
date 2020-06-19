@@ -1,9 +1,66 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
 class TestBlockquotes < Minitest::Test
-  include RbbCode::HTMLAssertions
-  
-  def test_blockquotes
+  include RbbCode::Heredoc
+  include RbbCode::OutputAssertions
+
+  def test_empty_blockquote_to_html
+    assert_converts_to(
+      '<blockquote></blockquote>',
+      '[quote][/quote]'
+    )
+  end
+
+  def test_single_line_blockquote_to_html
+    assert_converts_to(
+      '<blockquote><p>Quoth the raven</p></blockquote>',
+      '[quote]Quoth the raven[/quote]'
+    )
+  end
+
+  def test_muli_line_blockquote_to_html
+    assert_converts_to(
+      '<blockquote><p>Quoth the</p><p>raven</p></blockquote>',
+      heredoc(%(
+        [quote]Quoth
+        the 
+
+        raven[/quote]
+      ))
+    )
+  end
+
+  def test_empty_blockquote_to_markdown
+    assert_converts_to(
+      '> ',
+      '[quote][/quote]',
+      output_format: :markdown
+    )
+  end
+
+  def test_single_line_blockquote_to_markdown
+    assert_converts_to(
+      '> Quoth the raven',
+      '[quote]Quoth the raven[/quote]',
+      output_format: :markdown
+    )
+  end
+
+  def test_muli_line_blockquote_to_markdown
+    assert_converts_to(
+      "> Quoth\n> the\n> \n> raven",
+      heredoc(%(
+        [quote]Quoth
+        the
+
+        raven[/quote]
+      )),
+      output_format: :markdown
+    )
+  end
+
+  # Test that we can handle arbitrary line breaks before or after the inner BBCode.
+  def test_pre_and_post_breaks
     0.upto(3) do |pre_breaks|
       0.upto(3).each do |post_breaks|
         bb_code = '[quote]' + ("\n" * pre_breaks) + 'Quoth the raven' + ("\n" * post_breaks) + '[/quote]'
@@ -11,14 +68,21 @@ class TestBlockquotes < Minitest::Test
           '<blockquote><p>Quoth the raven</p></blockquote>',
           bb_code,
           {},
-          "#{bb_code} did not convert properly"
+          "HTML output not correct for #{pre_breaks} pre-break(s) and #{post_breaks} post-break(s)."
         )
       end
     end
-    
+
     0.upto(3) do |pre_breaks|
       0.upto(3).each do |post_breaks|
-        bb_code = '[quote]' + ("\n" * pre_breaks) + "Quoth\n\nthe\n\nraven" + ("\n" * post_breaks) + '[/quote]'
+        inner = heredoc(%(
+          Quoth
+
+          the
+
+          raven
+        ))
+        bb_code = '[quote]' + ("\n" * pre_breaks) + inner + ("\n" * post_breaks) + '[/quote]'
         assert_converts_to(
           '<blockquote>
             <p>Quoth</p>
@@ -27,7 +91,7 @@ class TestBlockquotes < Minitest::Test
           </blockquote>',
           bb_code,
           {},
-          "#{bb_code} did not convert properly"
+          "HTML output not correct for #{pre_breaks} pre-break(s) and #{post_breaks} post-break(s)."
         )
       end
     end

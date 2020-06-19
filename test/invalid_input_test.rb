@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'test_helper.rb')
 
 class TestBlockquotes < Minitest::Test
-  include RbbCode::HTMLAssertions
+  include RbbCode::OutputAssertions
   
   # Based on bug report:
   # https://github.com/jarrett/rbbcode/issues/17

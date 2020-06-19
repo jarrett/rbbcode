@@ -2,10 +2,22 @@
   def def_tag(rule_name, tag_name)
     "
       rule #{rule_name}
-        ('[#{tag_name.downcase}]'/'[#{tag_name.upcase}]')
-        (!'[/#{tag_name.downcase}]' !'[/#{tag_name.upcase}]'
-        (tag <RbbCode::TagNode> / .))+
-        ('[/#{tag_name.downcase}]' / '[/#{tag_name.upcase}]')
+        # Opening tag
+        (
+          '[#{tag_name.downcase}]' /
+          '[#{tag_name.upcase}]'
+        )
+        # Inner BBCode (which may include nested tags)
+        (
+          !'[/#{tag_name.downcase}]'
+          !'[/#{tag_name.upcase}]'
+          (tag / .)
+        )+
+        # Closing tag
+        (
+          '[/#{tag_name.downcase}]' /
+          '[/#{tag_name.upcase}]'
+        )
       end
     "
   end
@@ -13,31 +25,32 @@
 
 grammar RbbCodeGrammar
   rule document
-    # Consume the trailing linebreaks, because the paragraph lookahead
-    # doesn't consume them.
-    contents:(blockquote <RbbCode::BlockquoteNode> / list <RbbCode::ListNode> / paragraph <RbbCode::ParagraphNode> / . <RbbCode::LiteralTextNode>)* break_ws* <RbbCode::DocumentNode>
+    contents:(blockquote / list / paragraph / literal_text)*
+    break_ws*
+    <RbbCode::DocumentNode>
+  end
+
+  rule literal_text
+    [^\n]+ <RbbCode::LiteralTextNode>
   end
   
   rule paragraph
     (break_ws 2..)
     (
       !(break_ws 2..)
-      paragraph_contents
+      (tag / single_break_ws / .)
     )+
-  end
-  
-  rule paragraph_contents
-    (tag <RbbCode::TagNode> / single_break_ws / .)
+    <RbbCode::ParagraphNode>
   end
   
   rule break_ws
     # Allow whitespace around the linebreaks
-    [ \t]* [\r\n] [ \t]*
+    [ \t]* "\n" [ \t]*
   end
   
   rule whitespace
     # Any whitespace, including linebreaks
-    [ \t\r\n]
+    [ \t\n]
   end
   
   rule single_break_ws
@@ -45,31 +58,21 @@ grammar RbbCodeGrammar
     # certain keywords. This avoids printing an extra <br/> in some cases.
     break_ws !break_ws !(break_ws* ('[/quote]' / '[*]' / '[/list]')) <RbbCode::SingleBreakNode>
   end
-  
+
   rule blockquote
     break_ws*
     '[quote]'
-    contents:(
-      # Possible linebreaks after opening quote tag
-      break_ws*
-      
-      # First paragraph (mandatory)
-      (blockquote_paragraph <RbbCode::ParagraphNode>)
-      
-      # Subsequent paragraphs (optional)
-      (
-        (break_ws 2..)
-        (blockquote_paragraph <RbbCode::ParagraphNode>)
-      )*
-      
-      # Possible linebreaks before closing quote tag
-      break_ws*
-    )
+    "\n"*
+    lines:blockquote_line*
     '[/quote]'
+    <RbbCode::BlockquoteNode>
   end
-  
-  rule blockquote_paragraph
-    (!('[/quote]' / (break_ws 2..)) paragraph_contents)+
+
+  rule blockquote_line
+    contents:(!('[/quote]' / "\n") (tag / .))+
+    [ \t]*
+    breaks:break_ws*
+    <RbbCode::BlockquoteLineNode>
   end
   
   rule list
@@ -83,7 +86,11 @@ grammar RbbCodeGrammar
       (
         (
           '[*]'
-          contents:(!'[/list]' !'[*]' paragraph_contents)*
+          [ \t]*
+          contents:(
+            !'[/list]' !'[*]'
+            (tag / single_break_ws / .)
+          )*
           <RbbCode::ListItemNode>
         )
       )+
@@ -92,11 +99,13 @@ grammar RbbCodeGrammar
       whitespace*
     )
     '[/list]'
+    <RbbCode::ListNode>
   end
   
   rule tag
     # Make sure that anytime you call def_tag, you add it to this list:
-    bold / italic / underline / simple_url / complex_url / img
+    (bold / italic / underline / simple_url / complex_url / img)
+    <RbbCode::TagNode>
   end
   
   <%= def_tag 'bold', 'b' %>
