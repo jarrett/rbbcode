@@ -37,7 +37,9 @@ class RbbCode
   def convert(bb_code)
     # Collapse CRLFs to LFs. Then replace any solitary CRs with LFs.
     bb_code = bb_code.gsub("\r\n", "\n").gsub("\r", "\n")
-    output = self.class.parser_class.new.parse("\n\n" + bb_code + "\n\n").send("to_#{@options[:output_format]}")
+    # Add linebreaks before and after so that paragraphs etc. can be recognized.
+    bb_code = "\n\n" + bb_code + "\n\n"
+    output = self.class.parser_class.new.parse(bb_code).send("to_#{@options[:output_format]}")
     if @options[:emoticons]
       output = convert_emoticons(output)
     end

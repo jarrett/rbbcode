@@ -44,6 +44,8 @@ class TestLists < Minitest::Test
               * 1
               * 2
               * 3
+
+              
             )),
             bb_code,
             {output_format: :markdown},

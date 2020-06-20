@@ -51,7 +51,7 @@ class RbbCode
   module Heredoc
     def heredoc(input)
       lines = input.lines
-      unless lines.shift.match(/^[ \t]*\n$/)
+      unless lines.shift.match(/\A[ \t]*\n\Z/)
         raise ArgumentError, 'Input to #heredoc must begin with blank line'
       end
       unless lines.pop.match(/[ \t]*$/)

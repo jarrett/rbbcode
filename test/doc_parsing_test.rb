@@ -77,17 +77,19 @@ class TestDocParsing < Minitest::Test
 
         Here's one kind of link: [http://example.org](http://example.org)
 
-        Here's another: [Example](http://example.com)</a>
+        Here's another: [Example](http://example.com)
 
         This is an image: ![Image](http://example.com/foo.png)
         
         > This *is* a quotation.
         > 
         > Yes it is.
-                
-        * Entry 1
+        
+        * Entry 1 
         * Entry 2
         * Entry 3
+
+
       )),
 
       # ============================================================
@@ -108,11 +110,9 @@ class TestDocParsing < Minitest::Test
         
         This is an image: [img]http://example.com/foo.png[/img]
         
-        [quote]
-        This [i]is[/i] a quotation.
+        [quote]This [i]is[/i] a quotation.
         
-        Yes it is.
-        [/quote]
+        Yes it is.[/quote]
         
         [list] [*]Entry 1 [*]Entry 2
         [*]Entry 3

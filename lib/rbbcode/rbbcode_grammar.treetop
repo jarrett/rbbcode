@@ -44,13 +44,8 @@ grammar RbbCodeGrammar
   end
   
   rule break_ws
-    # Allow whitespace around the linebreaks
+    # A linebreak, possibly surrounded by whitespace
     [ \t]* "\n" [ \t]*
-  end
-  
-  rule whitespace
-    # Any whitespace, including linebreaks
-    [ \t\n]
   end
   
   rule single_break_ws
@@ -78,28 +73,21 @@ grammar RbbCodeGrammar
   rule list
     break_ws*
     '[list]'
-    contents:(
-      # Possible linebreaks after opening list tag
-      whitespace*
-      
-      # At least one list item
-      (
-        (
-          '[*]'
-          [ \t]*
-          contents:(
-            !'[/list]' !'[*]'
-            (tag / single_break_ws / .)
-          )*
-          <RbbCode::ListItemNode>
-        )
-      )+
-      
-      # Possible linebreaks before closing list tag
-      whitespace*
-    )
+    [ \t\n]*
+    items:list_item*
+    [ \t\n]*
     '[/list]'
     <RbbCode::ListNode>
+  end
+
+  rule list_item
+    '[*]'
+    [ \t]*
+    contents:(
+      !'[/list]' !'[*]'
+      (tag / single_break_ws / .)
+    )*
+    <RbbCode::ListItemNode>
   end
   
   rule tag

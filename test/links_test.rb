@@ -19,16 +19,16 @@ class TestLinks < Minitest::Test
 
   def test_simple_url_tag_to_markdown
     assert_converts_to(
-      '[http://example.com/foo/bar.html](http://example.com/foo/bar.html)',
-      '[url]http://example.com/foo/bar.html[/url]',
+      "Foo [http://example.com/foo/bar.html](http://example.com/foo/bar.html) bar\n\n",
+      'Foo [url]http://example.com/foo/bar.html[/url] bar',
       output_format: :markdown
     )
   end
 
   def test_complex_url_tag_to_markdown
     assert_converts_to(
-      '[Baz](http://example.com/foo/bar.html)',
-      '[url="http://example.com/foo/bar.html"]Baz[/url]',
+      "Foo [Baz](http://example.com/foo/bar.html) bar\n\n",
+      'Foo [url="http://example.com/foo/bar.html"]Baz[/url] bar',
       output_format: :markdown
     )
   end

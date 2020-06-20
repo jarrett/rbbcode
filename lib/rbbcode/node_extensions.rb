@@ -17,7 +17,7 @@ class RbbCode
           # This is a terminal node without a custom implementation of the
           # output method. If the node consists solely of whitespace, emit the
           # empty string. Otherwise, emit the node's text value.
-          node.text_value.match(/^[\n\t]+$/) ? '' : node.text_value
+          node.text_value.match(/\A[\n\t]+\Z/) ? '' : node.text_value
         end
       else
         if node.respond_to?(output_method)
@@ -41,7 +41,7 @@ class RbbCode
     end
 
     def to_markdown
-      contents.elements.collect { |p| p.to_markdown }.join.sub(/\n+$/, '')
+      contents.elements.collect { |p| p.to_markdown }.join
     end
   end
   
@@ -95,10 +95,11 @@ class RbbCode
 
     def to_markdown
       # Add a > character per line, preserving linebreaks as they are in the source.
+      # Then append two newlines.
       '> ' + lines.elements.inject('') do |output, line|
         inner_markdown = recursively_convert(line.contents, :to_markdown)
         output + inner_markdown + ("\n> " * line.post_breaks)
-      end
+      end + "\n\n"
     end
   end
   
@@ -116,13 +117,14 @@ class RbbCode
     def to_html
       # Convert the :contents child node (defined in the .treetop file)
       # and wrap the result in <ul> tags.
-      "\n<ul>" + recursively_convert(contents, :to_html) + "</ul>\n"
+      "\n<ul>" + recursively_convert(items, :to_html) + "</ul>\n"
     end
 
     def to_markdown
       # Convert the :contents child node (defined in the .treetop file).
-      # Unlike with HTML, no outer markup needed.
-      recursively_convert(contents, :to_markdown).lstrip
+      # (Unlike with HTML, no outer markup needed.) Then append an extra
+      # newline, for a total of two at the end.
+      recursively_convert(items, :to_markdown) + "\n"
     end
   end
   
@@ -265,6 +267,10 @@ class RbbCode
   module SingleBreakNode
     def to_html
       '<br/>'
+    end
+
+    def to_markdown
+      "\n"
     end
   end
   

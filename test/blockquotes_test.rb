@@ -18,7 +18,7 @@ class TestBlockquotes < Minitest::Test
     )
   end
 
-  def test_muli_line_blockquote_to_html
+  def test_multi_line_blockquote_to_html
     assert_converts_to(
       '<blockquote><p>Quoth the</p><p>raven</p></blockquote>',
       heredoc(%(
@@ -32,7 +32,7 @@ class TestBlockquotes < Minitest::Test
 
   def test_empty_blockquote_to_markdown
     assert_converts_to(
-      '> ',
+      "> \n\n",
       '[quote][/quote]',
       output_format: :markdown
     )
@@ -40,15 +40,22 @@ class TestBlockquotes < Minitest::Test
 
   def test_single_line_blockquote_to_markdown
     assert_converts_to(
-      '> Quoth the raven',
+      "> Quoth the raven\n\n",
       '[quote]Quoth the raven[/quote]',
       output_format: :markdown
     )
   end
 
-  def test_muli_line_blockquote_to_markdown
+  def test_multi_line_blockquote_to_markdown
     assert_converts_to(
-      "> Quoth\n> the\n> \n> raven",
+      heredoc(%(
+        > Quoth
+        > the
+        > 
+        > raven
+
+
+      )),
       heredoc(%(
         [quote]Quoth
         the
