@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rbbcode (1.0.5)
+    rbbcode (1.1.0)
       sanitize
       treetop (= 1.5.3)
 
