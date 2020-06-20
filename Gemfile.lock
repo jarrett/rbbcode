@@ -27,7 +27,7 @@ GEM
     polyglot (0.3.5)
     rake (13.0.1)
     ruby-progressbar (1.10.1)
-    sanitize (5.1.0)
+    sanitize (5.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
       nokogumbo (~> 2.0)
