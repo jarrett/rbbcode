@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = 'rbbcode'
-  s.version      = '1.0.5'
-  s.date         = '2017-05-17'
+  s.version      = '1.1.0'
+  s.date         = '2020-06-20'
   s.summary      = 'RbbCode'
   s.description  = 'Converts BBCode to HTML. Gracefully handles invalid input.'
   s.authors      = ['Jarrett Colby']
