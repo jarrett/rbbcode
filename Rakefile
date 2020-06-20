@@ -18,5 +18,7 @@ task :install do
 end
 
 task :release do
-  puts `gem push #{built_gem_name}`
+  # Use exec to replace the current process in case
+  # RubyGems prompts us for username etc.
+  exec "gem push #{built_gem_name}"
 end
