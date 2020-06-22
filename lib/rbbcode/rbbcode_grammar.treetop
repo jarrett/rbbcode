@@ -25,7 +25,7 @@
 
 grammar RbbCodeGrammar
   rule document
-    contents:(blockquote / list / paragraph / literal_text)*
+    contents:(blockquote / code / list / paragraph / literal_text)*
     break_ws*
     <RbbCode::DocumentNode>
   end
@@ -69,7 +69,23 @@ grammar RbbCodeGrammar
     breaks:break_ws*
     <RbbCode::BlockquoteLineNode>
   end
-  
+
+  rule code
+    break_ws*
+    '[code]'
+    "\n"*
+    lines:code_line*
+    '[/code]'
+    <RbbCode::CodeNode>
+  end
+
+  rule code_line
+    contents:(!('[/code]' / "\n") (tag / .))+
+    [ \t]*
+    breaks:break_ws*
+    <RbbCode::CodeLineNode>
+  end
+
   rule list
     break_ws*
     '[list]'
