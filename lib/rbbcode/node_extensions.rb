@@ -185,6 +185,30 @@ class RbbCode
     end
   end
 
+  # You won't find this module in the .treetop file. Instead, it's effectively a specialization
+  # of TagNode, which calls to ColorTagNode when processing a color tag.
+  module ColorTagNode
+    def color_to_html
+      text.text_value
+    end
+
+    def color_to_markdown
+      text.text_value
+    end
+  end
+
+  # You won't find this module in the .treetop file. Instead, it's effectively a specialization
+  # of TagNode, which calls to SizeTagNode when processing a size tag.
+  module SizeTagNode
+    def size_to_html
+      text.text_value
+    end
+
+    def size_to_markdown
+      text.text_value
+    end
+  end
+
   module UTagNode
     def u_to_markdown
       # Underlining is unsupported in Markdown. So we just ignore [u] tags.
@@ -198,8 +222,24 @@ class RbbCode
     # For each tag name, we can either: (a) map to a simple HTML tag or Markdown character, or
     # (b) invoke a separate Ruby module for more advanced logic.
     TAG_MAPPINGS = {
-      html: {'b' => 'strong', 'i' => 'em', 'u' => 'u', 'url' => URLTagNode, 'img' => ImgTagNode},
-      markdown: {'b' => '**', 'i' => '*', 'u' => UTagNode, 'url' => URLTagNode, 'img' => ImgTagNode}
+      html: {
+        'b' => 'strong',
+        'i' => 'em',
+        'u' => 'u',
+        'url' => URLTagNode,
+        'img' => ImgTagNode,
+        'color' => ColorTagNode,
+        'size' => SizeTagNode
+      },
+      markdown: {
+        'b' => '**',
+        'i' => '*',
+        'u' => UTagNode,
+        'url' => URLTagNode,
+        'img' => ImgTagNode,
+        'color' => ColorTagNode,
+        'size' => SizeTagNode
+      }
     }
     
     def contents
