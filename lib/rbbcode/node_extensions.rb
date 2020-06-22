@@ -189,11 +189,19 @@ class RbbCode
   # of TagNode, which calls to ColorTagNode when processing a color tag.
   module ColorTagNode
     def color_to_html
-      text.text_value
+      unsupported_tag
     end
 
     def color_to_markdown
-      text.text_value
+      unsupported_tag
+    end
+
+    def unsupported_tag
+      if RbbCode.options.fetch(:unsupported_features) == :remove
+        text.text_value
+      elsif RbbCode.options.fetch(:unsupported_features) == :span
+        '<span class="' + color_name.text_value + '">' + text.text_value + '</span>'
+      end
     end
   end
 
@@ -201,11 +209,19 @@ class RbbCode
   # of TagNode, which calls to SizeTagNode when processing a size tag.
   module SizeTagNode
     def size_to_html
-      text.text_value
+      unsupported_tag
     end
 
     def size_to_markdown
-      text.text_value
+      unsupported_tag
+    end
+
+    def unsupported_tag
+      if RbbCode.options.fetch(:unsupported_features) == :remove
+        text.text_value
+      elsif RbbCode.options.fetch(:unsupported_features) == :span
+        '<span class="size' + size_value.text_value + '">' + text.text_value + '</span>'
+      end
     end
   end
 
