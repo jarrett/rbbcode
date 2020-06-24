@@ -26,7 +26,13 @@ to use RbbCode.
 
 ## Options
 
-The constructor can accept an options hash.
+Both the constructor (`RbbCode.new`) and `RbbCode#convert` can accept an options hash. Options passed to `convert`
+will override options passed to `new`:
+
+    RbbCode
+      .new(:output_format => :html)
+      .convert('This is [b]BBCode[/b]', :output_format => :markdown)
+      # => "This is **BBCode**\n\n"
 
 You can set the `:output_format` to either `:html` or `:markdown`. If not specified, `:output_format` defaults
 to `:html`.
