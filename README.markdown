@@ -66,6 +66,8 @@ RbbCode supports the following BBCode features:
   * [i]
   * [u]
   * [s]
+  * [size]
+  * [color]
   * [url]
   * [img]
   * [quote]

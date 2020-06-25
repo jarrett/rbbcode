@@ -25,16 +25,17 @@ class RbbCode
     end
     RbbCodeGrammarParser
   end
-  
+
   def initialize(options = {})
     @options = {
       :output_format => :html,
       :emoticons => false,
       :sanitize => true,
+      :unsupported_features => :remove,
       :sanitize_config => RbbCode::DEFAULT_SANITIZE_CONFIG
     }.merge(options)
   end
-  
+
   def convert(bb_code, options = {})
     # Options passed to #convert will override any options passed to .new.
     options = @options.merge(options)

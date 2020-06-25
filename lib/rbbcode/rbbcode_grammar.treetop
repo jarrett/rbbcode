@@ -92,7 +92,7 @@ grammar RbbCodeGrammar
   
   rule tag
     # Make sure that anytime you call def_tag, you add it to this list:
-    (bold / italic / underline / simple_url / complex_url / img)
+    (bold / italic / underline / simple_url / complex_url / img / color / size)
     <RbbCode::TagNode>
   end
   
@@ -101,7 +101,19 @@ grammar RbbCodeGrammar
   <%= def_tag 'underline', 'u' %>
   <%= def_tag 'simple_url', 'url' %>
   <%= def_tag 'img', 'img' %>
-  
+
+  rule size
+    '[size=' size_value:[^\]]+ ']'
+    text:(!'[/size]' .)+
+    '[/size]'
+  end
+
+  rule color
+    '[color=' color_name:[^\]]+ ']'
+    text:(!'[/color]' .)+
+    '[/color]'
+  end
+
   rule complex_url
     '[url=' url:[^\]]+ ']'
     text:(!'[/url]' .)+
