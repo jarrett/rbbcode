@@ -8,7 +8,7 @@ new API, as described below.
 
 ## About RbbCode
 
-RbbCode converts BBCode to HTML. Basic usage:
+RbbCode converts BBCode to HTML and Markdown. Basic usage:
 
     RbbCode.new.convert('This is [b]BBCode[/b]')
 
@@ -26,7 +26,19 @@ to use RbbCode.
 
 ## Options
 
-The constructor can accept an options hash.
+Both the constructor (`RbbCode.new`) and `RbbCode#convert` can accept an options hash. Options passed to `convert`
+will override options passed to `new`:
+
+    RbbCode
+      .new(:output_format => :html)
+      .convert('This is [b]BBCode[/b]', :output_format => :markdown)
+      # => "This is **BBCode**\n\n"
+
+You can set the `:output_format` to either `:html` or `:markdown`. If not specified, `:output_format` defaults
+to `:html`.
+
+    RbbCode.new(:output_format => :html)
+    RbbCode.new(:output_format => :markdown)
 
 To add emoticon support:
 
@@ -66,6 +78,3 @@ Some BBCode parsers in the wild have more features. This varies from forum to fo
 certain tag or other feature you'd like to see supported, please open an issue on:
 
 https://github.com/jarrett/rbbcode
-
-If the feature you're requesting is reasonably common in the wild, there's a good chance I'll
-add it to RbbCode.
