@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage     = 'https://github.com/jarrett/rbbcode'
   
   s.add_runtime_dependency     'treetop', '1.5.3'
-  s.add_runtime_dependency     'sanitize'
+  s.add_runtime_dependency     'sanitize', '>= 6.0.2' # See CVE-2023-36823
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'minitest-reporters'
   s.add_development_dependency 'lorax', '>= 0.3.0.rc2'
