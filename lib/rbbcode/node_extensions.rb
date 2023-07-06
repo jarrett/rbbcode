@@ -5,7 +5,7 @@ class RbbCode
       str.sub(/^"+/, '').sub(/"+$/, '')
     end
   end
-  
+
   module RecursiveConversion
     def recursively_convert(node, output_method, options, depth = 0)
       if node.terminal?
@@ -34,7 +34,7 @@ class RbbCode
       end
     end
   end
-  
+
   module DocumentNode
     def to_html(options)
       contents.elements.collect { |p| p.to_html(options) }.join
@@ -44,10 +44,10 @@ class RbbCode
       contents.elements.collect { |p| p.to_markdown(options) }.join
     end
   end
-  
+
   module ParagraphNode
     include RecursiveConversion
-    
+
     def to_html(options)
       # Convert all child nodes, concatenate the results,
       # and wrap the concatenated HTML in <p> tags.
@@ -66,7 +66,7 @@ class RbbCode
       markdown + "\n\n"
     end
   end
-  
+
   module BlockquoteNode
     include RecursiveConversion
 
@@ -102,7 +102,7 @@ class RbbCode
       end + "\n\n"
     end
   end
-  
+
   module BlockquoteLineNode
     # Returns the number of line breaks after this line. May be zero for the final
     # line, since there doesn't have to be a break before [/quote].
@@ -113,7 +113,7 @@ class RbbCode
 
   module ListNode
     include RecursiveConversion
-    
+
     def to_html(options)
       # Convert the :contents child node (defined in the .treetop file)
       # and wrap the result in <ul> tags.
@@ -127,10 +127,10 @@ class RbbCode
       recursively_convert(items, :to_markdown, options) + "\n"
     end
   end
-  
+
   module ListItemNode
     include RecursiveConversion
-    
+
     def to_html(options)
       # Convert the :contents child node (defined in the .treetop file)
       # and wrap the result in <li> tags.
@@ -143,13 +143,13 @@ class RbbCode
       "* " + recursively_convert(contents, :to_html, options) + "\n"
     end
   end
-  
+
   # You won't find this module in the .treetop file. Instead, it's effectively a specialization
   # of TagNode, which calls to ImgTagNode when processing an img tag. (However, one of the
   # child nodes used here, :url, is indeed defined in the .treetop file.)
   module URLTagNode
     include Attributes
-    
+
     def url_to_html(options)
       # The :url child node (defined in the .treetop file) may or may not exist,
       # depending on how the link is formatted in the BBCode source.
@@ -172,7 +172,7 @@ class RbbCode
       end
     end
   end
-  
+
   # You won't find this module in the .treetop file. Instead, it's effectively a specialization
   # of TagNode, which calls to ImgTagNode when processing an img tag.
   module ImgTagNode
@@ -185,37 +185,93 @@ class RbbCode
     end
   end
 
+  # You won't find this module in the .treetop file. Instead, it's effectively a specialization
+  # of TagNode, which calls to ColorTagNode when processing a color tag.
+  module ColorTagNode
+    def color_to_html(options)
+      unsupported_tag(options)
+    end
+
+    def color_to_markdown(options)
+      unsupported_tag(options)
+    end
+
+    def unsupported_tag(options)
+      if options.fetch(:unsupported_features) == :remove
+        text.text_value
+      elsif options.fetch(:unsupported_features) == :span
+        '<span class="' + color_name.text_value + '">' + text.text_value + '</span>'
+      end
+    end
+  end
+
+  # You won't find this module in the .treetop file. Instead, it's effectively a specialization
+  # of TagNode, which calls to SizeTagNode when processing a size tag.
+  module SizeTagNode
+    def size_to_html(options)
+      unsupported_tag(options)
+    end
+
+    def size_to_markdown(options)
+      unsupported_tag(options)
+    end
+
+    def unsupported_tag(options)
+      if options.fetch(:unsupported_features) == :remove
+        text.text_value
+      elsif options.fetch(:unsupported_features) == :span
+        '<span class="size' + size_value.text_value + '">' + text.text_value + '</span>'
+      end
+    end
+  end
+
   module UTagNode
     def u_to_markdown(options)
       # Underlining is unsupported in Markdown. So we just ignore [u] tags.
       inner_bbcode
     end
   end
-  
+
   module TagNode
     include RecursiveConversion
-    
+
     # For each tag name, we can either: (a) map to a simple HTML tag or Markdown character, or
     # (b) invoke a separate Ruby module for more advanced logic.
     TAG_MAPPINGS = {
-      html: {'b' => 'strong', 'i' => 'em', 'u' => 'u', 'url' => URLTagNode, 'img' => ImgTagNode},
-      markdown: {'b' => '**', 'i' => '*', 'u' => UTagNode, 'url' => URLTagNode, 'img' => ImgTagNode}
+      html: {
+        'b' => 'strong',
+        'i' => 'em',
+        'u' => 'u',
+        'url' => URLTagNode,
+        'img' => ImgTagNode,
+        'color' => ColorTagNode,
+        'size' => SizeTagNode
+      },
+      markdown: {
+        'b' => '**',
+        'i' => '*',
+        'u' => UTagNode,
+        'url' => URLTagNode,
+        'img' => ImgTagNode,
+        'color' => ColorTagNode,
+        'size' => SizeTagNode
+      }
     }
-    
+
     def contents
       # The first element is the opening tag, the second is everything inside,
       # and the third is the closing tag.
-      elements[1] 
+      elements[1]
     end
-    
+
     def tag_name
       elements.first.text_value.slice(1..-2).downcase
     end
-    
+
     def inner_bbcode
       contents.elements.collect { |e| e.text_value }.join
     end
-    
+
     def inner_html(options)
       contents.elements.collect do |node|
         recursively_convert(node, :to_html, options)
@@ -254,7 +310,7 @@ class RbbCode
         send("wrap_#{output_format}", t, options)
       end
     end
-    
+
     def to_html(options)
       convert :html, options
     end
@@ -263,7 +319,7 @@ class RbbCode
       convert :markdown, options
     end
   end
-  
+
   module SingleBreakNode
     def to_html(options)
       '<br/>'
@@ -273,7 +329,7 @@ class RbbCode
       "\n"
     end
   end
-  
+
   module LiteralTextNode
     def to_html(options)
       text_value
