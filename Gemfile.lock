@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    rbbcode (1.1.0)
-      sanitize (>= 6.0.2)
+    rbbcode (1.1.1)
+      sanitize (~> 6, >= 6.0.2)
       treetop (= 1.5.3)
 
 GEM
@@ -37,10 +37,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  lorax (>= 0.3.0.rc2)
-  minitest
-  minitest-reporters
-  rake
+  lorax (= 0.3.0.rc2)
+  minitest (~> 5)
+  minitest-reporters (~> 1)
+  rake (~> 13)
   rbbcode!
 
 BUNDLED WITH
