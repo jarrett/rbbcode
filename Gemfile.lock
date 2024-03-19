@@ -13,18 +13,18 @@ GEM
     crass (1.0.6)
     lorax (0.3.0.rc2)
       nokogiri (>= 1.4)
-    mini_portile2 (2.8.2)
+    mini_portile2 (2.8.5)
     minitest (5.18.1)
     minitest-reporters (1.6.0)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    nokogiri (1.15.3)
+    nokogiri (1.16.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     polyglot (0.3.5)
-    racc (1.7.1)
+    racc (1.7.3)
     rake (13.0.6)
     ruby-progressbar (1.13.0)
     sanitize (6.0.2)
